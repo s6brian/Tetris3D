@@ -3,9 +3,14 @@
 #include "Tetris3DGameModeBase.h"
 #include "S6Player.h"
 
-ATetris3DGameModeBase::ATetris3DGameModeBase()
+void ATetris3DGameModeBase::StartPlay()
 {
-	DefaultPawnClass = AS6Player::StaticClass();
+	Super::StartPlay();
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Hello World, this is Tetris3D!"));
+	}
 }
 
 

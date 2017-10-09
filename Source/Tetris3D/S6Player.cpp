@@ -2,6 +2,7 @@
 
 #include "S6Player.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 
 // Sets default values
@@ -10,19 +11,23 @@ AS6Player::AS6Player()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Create our components
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	OurCameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
+	
+	// setup spring arm
+	OurCameraSpringArm->SetupAttachment(RootComponent);
+	OurCameraSpringArm->SetRelativeLocationAndRotation(FVector(-1500.0f, 0.0f, 200.0f), FRotator(15.0f, 0.0f, 0.0f));
+	OurCameraSpringArm->TargetArmLength = 400.f;
+	OurCameraSpringArm->bEnableCameraLag = true;
+	OurCameraSpringArm->CameraLagSpeed = 3.0f;
+
+	// setup player camera
+	OurCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("GameCamera"));
+	OurCamera->SetupAttachment(OurCameraSpringArm, USpringArmComponent::SocketName);
+
 	// Set this pawn to be controlled by the lowest-numbered player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
-
-	// Create a dummy root component we can attach things to.
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-	// Create a camera and a visible object
-	UCameraComponent* OurCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("OurCamera"));
-	OurVisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("OurVisibleComponent"));
-	// Attach our camera and visible object to our root component. Offset and rotate the camera.
-	OurCamera->SetupAttachment(RootComponent);
-	OurCamera->SetRelativeLocation(FVector(-1500.0f, 0.0f, 200.0f));
-	OurCamera->SetRelativeRotation(FRotator(15.0f, 0.0f, 0.0f));
-	OurVisibleComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -30,19 +35,16 @@ void AS6Player::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("S6Player Activated!"));
+	}
 }
 
 // Called every frame
 void AS6Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	/*FVector NewLocation = GetActorLocation();
-	NewLocation.X -= 1500.0f;
-	NewLocation.Z += 300.0f;
-	UE_LOG(LogTemp, Display, TEXT("new location: %s"), *NewLocation.ToString());
-	SetActorLocation(NewLocation);*/
 
 }
 
