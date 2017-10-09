@@ -13,8 +13,8 @@ UCLASS()
 class TETRIS3D_API ATetris3DGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
-	
-	
+
+public:
+	ATetris3DGameModeBase();
 	
 };
