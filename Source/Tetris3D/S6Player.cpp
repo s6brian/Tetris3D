@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "S6Player.h"
+#include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -19,7 +20,7 @@ AS6Player::AS6Player()
 	OurCameraSpringArm->SetupAttachment(RootComponent);
 	OurCameraSpringArm->SetRelativeLocationAndRotation(FVector(-1500.0f, 0.0f, 200.0f), FRotator(15.0f, 0.0f, 0.0f));
 	OurCameraSpringArm->TargetArmLength = 400.f;
-	OurCameraSpringArm->bEnableCameraLag = true;
+	OurCameraSpringArm->bEnableCameraLag = false;//true;
 	OurCameraSpringArm->CameraLagSpeed = 3.0f;
 
 	// setup player camera
@@ -46,12 +47,40 @@ void AS6Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Rotate our actor's yaw, which will turn our camera because we're attached to it
+	{
+		FRotator NewRotation = GetActorRotation();
+		NewRotation.Yaw += CameraInput.X;
+		SetActorRotation(NewRotation);
+	}
+
 }
 
 // Called to bind functionality to input
-void AS6Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AS6Player::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, this, &AS6Player::OnMouseLeftDown);
+	PlayerInputComponent->BindAction("MouseLeft", IE_Released, this, &AS6Player::OnMouseLeftUp);
+
+	PlayerInputComponent->BindAxis("MouseX", this, &AS6Player::YawCamera);
+}
+
+void AS6Player::YawCamera(float AxisValue)
+{
+	// update camera rotation x only while holding down left mouse
+	if (!bMouseLeftPressed) { return; }
+	CameraInput.X = AxisValue;
+}
+
+void AS6Player::OnMouseLeftDown()
+{
+	bMouseLeftPressed = true;
+}
+
+void AS6Player::OnMouseLeftUp()
+{
+	bMouseLeftPressed = false;
 }
 
