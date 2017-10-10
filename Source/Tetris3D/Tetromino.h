@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "S6Player.generated.h"
+#include "Tetromino.generated.h"
 
 UCLASS()
-class TETRIS3D_API AS6Player : public APawn
+class TETRIS3D_API ATetromino : public APawn
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	AS6Player();
+	ATetromino();
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,18 +26,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-protected:
-	UPROPERTY(EditAnywhere)
-	class USpringArmComponent* OurCameraSpringArm;
-	class UCameraComponent* OurCamera;
-	
-	//Input variables
-	FVector2D CameraInput;
-	bool bMouseLeftPressed;
+	void MoveLeft();
+	void MoveRight();
+	void RotateCW();
+	void RotateCCW();
+//
+//protected:
+//	void DisplayLog(FString LogMessage);
 
-public:
-	//Input functions
-	void YawCamera(float AxisValue);
-	void OnMouseLeftDown();
-	void OnMouseLeftUp();
 };

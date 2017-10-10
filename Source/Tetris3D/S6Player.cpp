@@ -4,6 +4,7 @@
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Math/UnrealMathUtility.h"
 
 
 // Sets default values
@@ -27,8 +28,10 @@ AS6Player::AS6Player()
 	OurCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("GameCamera"));
 	OurCamera->SetupAttachment(OurCameraSpringArm, USpringArmComponent::SocketName);
 
-	// Set this pawn to be controlled by the lowest-numbered player
-	AutoPossessPlayer = EAutoReceiveInput::Player0;
+	//// Set this pawn to be controlled by the lowest-numbered player
+	//AutoPossessPlayer = EAutoReceiveInput::Player0;
+	//AutoPossessAI = EAutoPossessAI::Disabled;
+	//AIControllerClass = AController::None;
 }
 
 // Called when the game starts or when spawned
@@ -61,17 +64,13 @@ void AS6Player::SetupPlayerInputComponent(class UInputComponent* PlayerInputComp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, this, &AS6Player::OnMouseLeftDown);
-	PlayerInputComponent->BindAction("MouseLeft", IE_Released, this, &AS6Player::OnMouseLeftUp);
-
-	PlayerInputComponent->BindAxis("MouseX", this, &AS6Player::YawCamera);
 }
 
 void AS6Player::YawCamera(float AxisValue)
 {
 	// update camera rotation x only while holding down left mouse
 	if (!bMouseLeftPressed) { return; }
-	CameraInput.X = AxisValue;
+	CameraInput.X = AxisValue * 0.3f;
 }
 
 void AS6Player::OnMouseLeftDown()
