@@ -44,7 +44,8 @@ void ATetromino::MoveLeft()
 	}
 
 	FVector NewLocation = GetActorLocation();
-	NewLocation.X -= 50.0f;
+	NewLocation.Y -= 50.0f;
+	//NewLocation.X -= 50.0f;
 	SetActorLocation(NewLocation);
 }
 
@@ -57,8 +58,17 @@ void ATetromino::MoveRight()
 	}
 
 	FVector NewLocation = GetActorLocation();
-	NewLocation.X += 50.0f;
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, NewLocation.ToString());
+	//UE_LOG(LogTemp, Log, TEXT("prev loc: %s"), NewLocation.ToString());
+
+	NewLocation.Y += 50.0f;
+	//NewLocation.X += 50.0f;
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, NewLocation.ToString());
+	//UE_LOG(LogTemp, Log, TEXT("new loc : %s"), NewLocation.ToString());
+
 	SetActorLocation(NewLocation);
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, GetActorLocation().ToString());
+	//UE_LOG(LogTemp, Log, TEXT("curr loc: %s"), NewLocation.ToString());
 }
 
 void ATetromino::RotateCW()
