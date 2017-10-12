@@ -9,8 +9,10 @@ struct FTetrominoMatrix
 {
 
 private:
-	int32			Size;
+	int32 Size;
+	TArray<int32> BitMap;
 
+	// TODO: consider bitwise operations for bitmap manipulation
 	void TransposeBitMap()
 	{
 
@@ -22,9 +24,6 @@ private:
 	}
 
 public:
-
-	TArray<int32>	BitMap;
-
 	static const FTetrominoMatrix I;
 	static const FTetrominoMatrix J;
 	static const FTetrominoMatrix L;
@@ -33,14 +32,27 @@ public:
 	static const FTetrominoMatrix T;
 	static const FTetrominoMatrix O;
 
+	int32 GetSize()
+	{
+		return Size;
+	}
+
+	// returns a BitMap copy
+	TArray<int32> GetBitMap()
+	{
+		return BitMap;
+	}
+
 	void RotateClockwise()
 	{
-
+		TransposeBitMap();
+		ReverseBitMapRows();
 	}
 
 	void RotateCounterClockwise()
 	{
-
+		ReverseBitMapRows();
+		TransposeBitMap();
 	}
 
 	FTetrominoMatrix (){}

@@ -1,9 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Tetromino.h"
-#include "Components/InputComponent.h"
 #include "../Helpers/TetrominoMatrix.h"
-//#include "Engine.h"
+#include "Components/InputComponent.h"
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "ConstructorHelpers.h"
 
 
 // Sets default values
@@ -14,6 +16,28 @@ ATetromino::ATetromino()
 
 	// Set this pawn to be controlled by the lowest-numbered player
 	AutoPossessPlayer = EAutoReceiveInput::Disabled;
+
+	//RootComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("RootComponent")); //CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	//RootComponent->SetWorldLocation(FVector(-450.0f, 50.0f, 100.0f));
+
+	//// initialize bit cubes (4x4 matrix, max)
+	//UStaticMeshComponent * BitCube;
+	//static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeAsset(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
+	////GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("TRY ASSET!"));
+
+	//if (CubeAsset.Succeeded())
+	//{
+	//	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("SUCCESS!"));
+
+	//	for (int idx = 0; idx < 1; ++idx)
+	//	{
+	//		BitCube = CreateDefaultSubobject<UStaticMeshComponent>(FName(*FString::Printf(TEXT("BitCube%d"), idx)));
+	//		BitCube->SetupAttachment(RootComponent);
+	//		BitCube->SetStaticMesh(CubeAsset.Object);
+	//		BitCube->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	//		BitCube->SetWorldScale3D(FVector(0.9f));
+	//	}
+	//}
 }
 
 // Called when the game starts or when spawned
@@ -36,6 +60,11 @@ void ATetromino::Tick(float DeltaTime)
 //	Super::SetupPlayerInputComponent(PlayerInputComponent);
 //
 //}
+
+void ATetromino::RefreshDisplay()
+{
+
+}
 
 void ATetromino::MoveLeft()
 {
@@ -78,9 +107,9 @@ void ATetromino::RotateCW()
 	//FTetrominoMatrix CurrentTetromino = FTetrominoMatrix::L;
 	//FTetrominoMatrix NextTetromino = FTetrominoMatrix::L;
 
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("current[0]: %d, next[0]: %d"), CurrentTetromino.BitMap[0], NextTetromino.BitMap[0]));
-	//NextTetromino.BitMap[0] = 2;
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("current[0]: %d, next[0]: %d"), CurrentTetromino.BitMap[0], NextTetromino.BitMap[0]));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("current[0]: %d, next[0]: %d"), CurrentTetromino.GetBitMap()[0], NextTetromino.GetBitMap()[0]));
+	//NextTetromino.GetBitMap()[0] = 20;
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("current[0]: %d, next[0]: %d"), CurrentTetromino.GetBitMap()[0], NextTetromino.GetBitMap()[0]));
 
 	//DisplayLog("Clockwise Rotation!");
 	//if (GEngine)

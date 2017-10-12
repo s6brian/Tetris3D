@@ -20,8 +20,8 @@ class TETRIS3D_API ATetris3DGameModeBase : public AGameModeBase
 protected:
 	virtual void StartPlay() override;
 
-	//UPROPERTY(EditAnywhere, Category = "Spawning")
-	//TSubclassOf<class ATetromino> TetrominoBPClass;
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<class ATetromino> TetrominoBPClass;
 
 	class AS6PlayerController * S6PlayerController;
 	class ATetromino          * Tetromino;

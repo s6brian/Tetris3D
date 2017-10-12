@@ -15,9 +15,14 @@ public:
 	// Sets default values for this pawn's properties
 	ATetromino();
 
+private:
+	TArray<class UStaticMeshComponent*> BitCubes;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	void RefreshDisplay();
 
 public:	
 	// Called every frame
