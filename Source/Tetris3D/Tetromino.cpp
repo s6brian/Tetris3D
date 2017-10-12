@@ -2,6 +2,8 @@
 
 #include "Tetromino.h"
 #include "Components/InputComponent.h"
+#include "../Helpers/TetrominoMatrix.h"
+//#include "Engine.h"
 
 
 // Sets default values
@@ -73,6 +75,13 @@ void ATetromino::MoveRight()
 
 void ATetromino::RotateCW()
 {
+	//FTetrominoMatrix CurrentTetromino = FTetrominoMatrix::L;
+	//FTetrominoMatrix NextTetromino = FTetrominoMatrix::L;
+
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("current[0]: %d, next[0]: %d"), CurrentTetromino.BitMap[0], NextTetromino.BitMap[0]));
+	//NextTetromino.BitMap[0] = 2;
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("current[0]: %d, next[0]: %d"), CurrentTetromino.BitMap[0], NextTetromino.BitMap[0]));
+
 	//DisplayLog("Clockwise Rotation!");
 	//if (GEngine)
 	//{
