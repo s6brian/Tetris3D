@@ -6,6 +6,88 @@
 #include "GameFramework/Pawn.h"
 #include "Tetromino.generated.h"
 
+USTRUCT()
+struct FTetrominoMatrix
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	int32 Size;
+
+	UPROPERTY()
+	TArray<int32> VisibilityFlags;
+
+	/*int32* I() const
+	{
+		int32 DefaultFlags[] = { 0, 0, 1, 0,
+								 0, 0, 1, 0,
+								 0, 0, 1, 0,
+								 0, 0, 1, 0 };
+		return DefaultFlags;
+	}
+
+	int32* J() const
+	{
+		int32 DefaultFlags[] = { 0, 1, 0,
+								 0, 1, 0,
+								 1, 1, 0 };
+
+		return DefaultFlags;
+	}
+
+	int32* L() const
+	{
+		int32 DefaultFlags[] = { 0, 1, 0,
+								 0, 1, 0,
+								 0, 1, 1 };
+
+		return DefaultFlags;
+	}
+
+	int32* O() const
+	{
+		int32 DefaultFlags[] = { 1, 1,
+								 1, 1 };
+
+		return DefaultFlags;
+	}
+
+	int32* S() const
+	{
+		int32 DefaultFlags[] = { 0, 0, 0,
+								 0, 1, 1,
+								 1, 1, 0 };
+
+		return DefaultFlags;
+	}*/
+
+	
+
+	FTetrominoMatrix(){}
+
+	FTetrominoMatrix( const int32 & PSize, ... )
+	{
+		Size = PSize;
+
+		va_list MatrixValues;
+		va_start(MatrixValues, Size);
+
+		for (int idx = 0; idx < Size * Size; idx++)
+		{
+			VisibilityFlags.Add(va_arg(MatrixValues, int32));
+		}
+
+		va_end(MatrixValues);
+
+		//VisibilityFlags.Append(PMatrix, PSize);
+	}
+};
+
+static const FTetrominoMatrix I = { 4,	0, 0, 1, 0,
+										0, 0, 1, 0,
+										0, 0, 1, 0,
+										0, 0, 1, 0 };
+
 UCLASS()
 class TETRIS3D_API ATetromino : public APawn
 {
@@ -24,7 +106,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void MoveLeft();
 	void MoveRight();

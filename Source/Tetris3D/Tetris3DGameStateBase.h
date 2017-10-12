@@ -14,7 +14,12 @@ class TETRIS3D_API ATetris3DGameStateBase : public AGameStateBase
 {
 	GENERATED_BODY()
 	
-	
+//protected:
+//	// Called when the game starts or when spawned
+//	virtual void BeginPlay() override;
+//
+//protected:
+//	class ATetromino * Tetromino;
 	
 	
 };

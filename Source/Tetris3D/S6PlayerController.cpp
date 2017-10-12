@@ -5,88 +5,91 @@
 #include "Tetromino.h"
 #include "Engine/World.h"
 
-ATetromino* Tetromino;
+void AS6PlayerController::BeginPlayingState()
+{
+	S6Player = Cast<AS6Player>(this->GetPawn());
+
+	//for (FConstPawnIterator PawnIterator = GetWorld()->GetPawnIterator(); PawnIterator; PawnIterator++)
+	//{
+	//	Tetromino = Cast<ATetromino>(*PawnIterator);
+
+	//	if (Tetromino)// && GEngine)
+	//	{
+	//		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Tetromino->GetName());
+	//		break;
+	//	}
+	//}
+}
+
+void AS6PlayerController::SetTetromino(ATetromino * PTetromino)
+{
+	Tetromino = PTetromino;
+}
 
 void AS6PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("MouseLeft", IE_Pressed, this, &AS6PlayerController::OnMouseLeftDown);
+	InputComponent->BindAction("MouseLeft", IE_Pressed , this, &AS6PlayerController::OnMouseLeftDown);
 	InputComponent->BindAction("MouseLeft", IE_Released, this, &AS6PlayerController::OnMouseLeftUp);
-	InputComponent->BindAction("MoveLeft", IE_Pressed, this, &AS6PlayerController::OnPressA);
-	InputComponent->BindAction("MoveRight", IE_Pressed, this, &AS6PlayerController::OnPressD);
-	InputComponent->BindAction("RotateCW", IE_Pressed, this, &AS6PlayerController::OnPressE);
-	InputComponent->BindAction("RotateCCW", IE_Pressed, this, &AS6PlayerController::OnPressQ);
+	InputComponent->BindAction("MoveLeft" , IE_Pressed , this, &AS6PlayerController::OnPressA);
+	InputComponent->BindAction("MoveRight", IE_Pressed , this, &AS6PlayerController::OnPressD);
+	InputComponent->BindAction("RotateCW" , IE_Pressed , this, &AS6PlayerController::OnPressE);
+	InputComponent->BindAction("RotateCCW", IE_Pressed , this, &AS6PlayerController::OnPressQ);
 
 	InputComponent->BindAxis("MouseX", this, &AS6PlayerController::OnMouseX);
 
-	for (FConstPawnIterator PawnIterator = GetWorld()->GetPawnIterator(); PawnIterator; PawnIterator++)
-	{
-		Tetromino = Cast<ATetromino>(*PawnIterator);
-
-		if (Tetromino && GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Tetromino->GetName());
-			break;
-		}
-	}
+	
 }
 
 void AS6PlayerController::OnMouseX(float AxisValue)
 {
-	//// update camera rotation x only while holding down left mouse
-	//if (!bMouseLeftPressed) { return; }
-	//CameraInput.X = AxisValue * 0.3f;
-
 	////DisplayLog("Move Left!");
 	//if (GEngine && (AxisValue > 0.5f || AxisValue < -0.5f))
 	//{
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("On Mouse X!"));
 	//}
 
-	AS6Player* s6Player = Cast<AS6Player>(this->GetPawn());
-	if (s6Player)
+	if (S6Player)
 	{
-		s6Player->YawCamera(AxisValue);
+		S6Player->YawCamera(AxisValue);
 	}
 }
 
 void AS6PlayerController::OnMouseLeftDown()
 {
 	//bMouseLeftPressed = true;
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("On Left Mouse Down!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("On Left Mouse Down!"));
+	//}
 
-	AS6Player* s6Player = Cast<AS6Player>(this->GetPawn());
-	if (s6Player)
+	if (S6Player)
 	{
-		s6Player->OnMouseLeftDown();
+		S6Player->OnMouseLeftDown();
 	}
 }
 
 void AS6PlayerController::OnMouseLeftUp()
 {
 	//bMouseLeftPressed = false;
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("On Left Mouse Up!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("On Left Mouse Up!"));
+	//}
 
-	AS6Player* s6Player = Cast<AS6Player>(this->GetPawn());
-	if (s6Player)
+	if (S6Player)
 	{
-		s6Player->OnMouseLeftUp();
+		S6Player->OnMouseLeftUp();
 	}
 }
 
 void AS6PlayerController::OnPressA()
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed A!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed A!"));
+	//}
 
 	if (Tetromino)
 	{
@@ -96,10 +99,10 @@ void AS6PlayerController::OnPressA()
 
 void AS6PlayerController::OnPressD()
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed D!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed D!"));
+	//}
 
 	if (Tetromino)
 	{
@@ -109,10 +112,10 @@ void AS6PlayerController::OnPressD()
 
 void AS6PlayerController::OnPressE()
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed E!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed E!"));
+	//}
 
 	if (Tetromino)
 	{
@@ -122,10 +125,10 @@ void AS6PlayerController::OnPressE()
 
 void AS6PlayerController::OnPressQ()
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed Q!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed Q!"));
+	//}
 
 	if (Tetromino)
 	{

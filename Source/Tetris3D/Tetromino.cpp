@@ -28,23 +28,23 @@ void ATetromino::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void ATetromino::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
+//// Called to bind functionality to input
+//void ATetromino::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+//{
+//	Super::SetupPlayerInputComponent(PlayerInputComponent);
+//
+//}
 
 void ATetromino::MoveLeft()
 {
 	//DisplayLog("Move Left!");
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Move Left!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Move Left!"));
+	//}
 
 	FVector NewLocation = GetActorLocation();
-	NewLocation.Y -= 50.0f;
+	NewLocation.Y -= 100.0f;
 	//NewLocation.X -= 50.0f;
 	SetActorLocation(NewLocation);
 }
@@ -52,16 +52,16 @@ void ATetromino::MoveLeft()
 void ATetromino::MoveRight()
 {
 	//DisplayLog("Move Right!");
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Move Right!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Move Right!"));
+	//}
 
 	FVector NewLocation = GetActorLocation();
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, NewLocation.ToString());
 	//UE_LOG(LogTemp, Log, TEXT("prev loc: %s"), NewLocation.ToString());
 
-	NewLocation.Y += 50.0f;
+	NewLocation.Y += 100.0f;
 	//NewLocation.X += 50.0f;
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, NewLocation.ToString());
 	//UE_LOG(LogTemp, Log, TEXT("new loc : %s"), NewLocation.ToString());
@@ -74,19 +74,19 @@ void ATetromino::MoveRight()
 void ATetromino::RotateCW()
 {
 	//DisplayLog("Clockwise Rotation!");
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Clockwise Rotation!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Clockwise Rotation!"));
+	//}
 }
 
 void ATetromino::RotateCCW()
 {
 	//DisplayLog("Counter-Clockwise Rotation!");
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Counter-Clockwise Rotation!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Counter-Clockwise Rotation!"));
+	//}
 }
 
 //void ATetromino::DisplayLog(FString LogMessage)

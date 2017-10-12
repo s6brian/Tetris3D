@@ -14,9 +14,13 @@ class TETRIS3D_API AS6PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
-	virtual void SetupInputComponent() override;
-	
 protected:
+	virtual void SetupInputComponent() override;
+	virtual void BeginPlayingState() override;
+
+protected:
+	class ATetromino * Tetromino;
+	class AS6Player  * S6Player;
 
 	//Input functions
 	void OnMouseX(float AxisValue);
@@ -26,6 +30,9 @@ protected:
 	void OnPressD();
 	void OnPressE();
 	void OnPressQ();
+
+public:
+	void SetTetromino(ATetromino * PTetromino);
 
 	
 };

@@ -39,10 +39,10 @@ void AS6Player::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("S6Player Activated!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("S6Player Activated!"));
+	//}
 }
 
 // Called every frame
@@ -60,11 +60,11 @@ void AS6Player::Tick(float DeltaTime)
 }
 
 // Called to bind functionality to input
-void AS6Player::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
+//void AS6Player::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+//{
+//	Super::SetupPlayerInputComponent(PlayerInputComponent);
+//
+//}
 
 void AS6Player::YawCamera(float AxisValue)
 {
