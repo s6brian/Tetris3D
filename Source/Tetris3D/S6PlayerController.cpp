@@ -8,17 +8,6 @@
 void AS6PlayerController::BeginPlayingState()
 {
 	S6Player = Cast<AS6Player>(this->GetPawn());
-
-	//for (FConstPawnIterator PawnIterator = GetWorld()->GetPawnIterator(); PawnIterator; PawnIterator++)
-	//{
-	//	Tetromino = Cast<ATetromino>(*PawnIterator);
-
-	//	if (Tetromino)// && GEngine)
-	//	{
-	//		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Tetromino->GetName());
-	//		break;
-	//	}
-	//}
 }
 
 void AS6PlayerController::SetTetromino(ATetromino * PTetromino)
