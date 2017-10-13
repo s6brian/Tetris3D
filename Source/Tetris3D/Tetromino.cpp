@@ -14,30 +14,39 @@ ATetromino::ATetromino()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Set this pawn to be controlled by the lowest-numbered player
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	UStaticMeshComponent * BitCube;
+
+	for (int idx = 0; idx < 5; ++idx)
+	{
+		BitCube = CreateDefaultSubobject<UStaticMeshComponent>(FName(*FString::Printf(TEXT("BitCube%d"), idx)));
+		BitCube->SetupAttachment(RootComponent);
+		BitCube->SetRelativeLocation(FVector(0.0f, 100.0f * idx, 300.0f));
+		BitCube->SetWorldScale3D(FVector(0.9f));
+		Blocks.Add(BitCube);
+	}
+}
+
+void ATetromino::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
 	AutoPossessPlayer = EAutoReceiveInput::Disabled;
 
-	//RootComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("RootComponent")); //CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-	//RootComponent->SetWorldLocation(FVector(-450.0f, 50.0f, 100.0f));
+	if (StaticMesh)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("CubeComponent does exist!"));
+		}
 
-	//// initialize bit cubes (4x4 matrix, max)
-	//UStaticMeshComponent * BitCube;
-	//static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeAsset(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
-	////GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("TRY ASSET!"));
+		for (int idx = 0; idx < 5; ++idx)
+		{
+			Blocks[idx]->SetStaticMesh(StaticMesh);
+		}
 
-	//if (CubeAsset.Succeeded())
-	//{
-	//	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("SUCCESS!"));
-
-	//	for (int idx = 0; idx < 1; ++idx)
-	//	{
-	//		BitCube = CreateDefaultSubobject<UStaticMeshComponent>(FName(*FString::Printf(TEXT("BitCube%d"), idx)));
-	//		BitCube->SetupAttachment(RootComponent);
-	//		BitCube->SetStaticMesh(CubeAsset.Object);
-	//		BitCube->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	//		BitCube->SetWorldScale3D(FVector(0.9f));
-	//	}
-	//}
+		return;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -54,13 +63,6 @@ void ATetromino::Tick(float DeltaTime)
 
 }
 
-//// Called to bind functionality to input
-//void ATetromino::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-//{
-//	Super::SetupPlayerInputComponent(PlayerInputComponent);
-//
-//}
-
 void ATetromino::RefreshDisplay()
 {
 
@@ -76,7 +78,6 @@ void ATetromino::MoveLeft()
 
 	FVector NewLocation = GetActorLocation();
 	NewLocation.Y -= 100.0f;
-	//NewLocation.X -= 50.0f;
 	SetActorLocation(NewLocation);
 }
 
@@ -89,17 +90,8 @@ void ATetromino::MoveRight()
 	//}
 
 	FVector NewLocation = GetActorLocation();
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, NewLocation.ToString());
-	//UE_LOG(LogTemp, Log, TEXT("prev loc: %s"), NewLocation.ToString());
-
 	NewLocation.Y += 100.0f;
-	//NewLocation.X += 50.0f;
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, NewLocation.ToString());
-	//UE_LOG(LogTemp, Log, TEXT("new loc : %s"), NewLocation.ToString());
-
 	SetActorLocation(NewLocation);
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, GetActorLocation().ToString());
-	//UE_LOG(LogTemp, Log, TEXT("curr loc: %s"), NewLocation.ToString());
 }
 
 void ATetromino::RotateCW()
@@ -127,11 +119,4 @@ void ATetromino::RotateCCW()
 	//}
 }
 
-//void ATetromino::DisplayLog(FString LogMessage)
-//{
-//	if (GEngine)
-//	{
-//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT(LogMessage));
-//	}
-//}
 

@@ -16,11 +16,23 @@ public:
 	ATetromino();
 
 private:
-	TArray<class UStaticMeshComponent*> BitCubes;
+	TArray<class UStaticMeshComponent *> Blocks;
+
+public:
+	//UPROPERTY(EditAnywhere)
+	//USceneComponent * CubeComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UStaticMesh * StaticMesh;
+
+	//UPROPERTY(EditAnywhere)
+	//class AActor * CubeTemplate;
+	//class UStaticMesh * CubeAsset;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 	
 	void RefreshDisplay();
 
@@ -28,15 +40,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	void MoveLeft();
 	void MoveRight();
 	void RotateCW();
 	void RotateCCW();
-//
-//protected:
-//	void DisplayLog(FString LogMessage);
 
 };

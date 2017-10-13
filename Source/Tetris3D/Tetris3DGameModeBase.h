@@ -14,9 +14,6 @@ class TETRIS3D_API ATetris3DGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-//public:
-//	ATetris3DGameModeBase();
-
 protected:
 	virtual void StartPlay() override;
 	virtual APlayerController* SpawnPlayerController(ENetRole InRemoteRole, FVector const & SpawnLocation, FRotator const & SpawnRotation) override;
