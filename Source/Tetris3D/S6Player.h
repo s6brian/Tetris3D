@@ -27,7 +27,7 @@ public:
 	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-	UPROPERTY(EditAnywhere)
+	//UPROPERTY(EditAnywhere)
 	class USpringArmComponent* OurCameraSpringArm;
 	class UCameraComponent* OurCamera;
 	
