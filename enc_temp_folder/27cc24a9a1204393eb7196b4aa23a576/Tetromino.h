@@ -15,10 +15,11 @@ public:
 	// Sets default values for this pawn's properties
 	ATetromino();
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bri")
+private:
 	TArray<class UStaticMeshComponent *> Blocks;
+	//FTetrominoMatrix CurrentBlockMap;
 
+public:
 	UPROPERTY(EditAnywhere)
 	UStaticMesh * BlockStaticMesh;
 

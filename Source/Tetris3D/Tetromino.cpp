@@ -150,6 +150,9 @@ void ATetromino::RotateCW()
 	//{
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Clockwise Rotation!"));
 	//}
+
+	CurrentBlockMap.RotateClockwise();
+	RefreshDisplay();
 }
 
 void ATetromino::RotateCCW()
@@ -159,6 +162,9 @@ void ATetromino::RotateCCW()
 	//{
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Counter-Clockwise Rotation!"));
 	//}
+
+	CurrentBlockMap.RotateCounterClockwise();
+	RefreshDisplay();
 }
 
 
