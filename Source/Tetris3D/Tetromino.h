@@ -17,23 +17,26 @@ public:
 
 private:
 	TArray<class UStaticMeshComponent *> Blocks;
+	//FTetrominoMatrix CurrentBlockMap;
 
 public:
-	//UPROPERTY(EditAnywhere)
-	//USceneComponent * CubeComponent;
+	UPROPERTY(EditAnywhere)
+	UStaticMesh * BlockStaticMesh;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UStaticMesh * StaticMesh;
+	UPROPERTY(EditAnywhere)
+	int32 BlockSize = 100;
 
-	//UPROPERTY(EditAnywhere)
-	//class AActor * CubeTemplate;
-	//class UStaticMesh * CubeAsset;
+	UPROPERTY(EditAnywhere)
+	float BlockScale = 0.9f;
+
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
-	
+
+	void GenerateRandomTetromino();
+	void ResetPosition();
 	void RefreshDisplay();
 
 public:	
