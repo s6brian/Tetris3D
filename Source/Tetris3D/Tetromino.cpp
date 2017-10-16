@@ -3,7 +3,8 @@
 #define BLOCKS_COUNT SIZE * SIZE
 
 #include "Tetromino.h"
-#include "../Helpers/TetrominoMatrix.h"
+//#include "../Utilities/TetrominoMatrix.h"
+//#include "TetrominoMatrix.h"
 #include "Components/InputComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -11,7 +12,7 @@
 
 
 // TODO: this should be declared in header file
-FTetrominoMatrix CurrentBlockMap;
+//FTetrominoMatrix CurrentBlockMap;
 
 // Sets default values
 ATetromino::ATetromino()
@@ -77,7 +78,7 @@ void ATetromino::Tick(float DeltaTime)
 
 void ATetromino::GenerateRandomTetromino()
 {
-	CurrentBlockMap = FTetrominoMatrix::L;
+	//CurrentBlockMap = FTetrominoMatrix::L;
 
 }
 

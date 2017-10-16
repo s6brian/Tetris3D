@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "TetrominoMatrix.h"
 #include "Tetromino.generated.h"
 
 UCLASS()
@@ -27,6 +28,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float BlockScale = 0.9f;
+
+	FTetrominoMatrix CurrentBlockMap;
 
 
 protected:

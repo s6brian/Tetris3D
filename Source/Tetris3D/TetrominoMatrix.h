@@ -1,12 +1,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TetrominoMatrix.generated.h"
 
 /**
  * A 1D array of integers representing current tetromino rotation / orientation
  */
+USTRUCT()
 struct FTetrominoMatrix
 {
+	GENERATED_BODY()
 
 private:
 	int32 Size;
@@ -17,10 +20,7 @@ private:
 	{
 		int32 computedIndex0;
 		int32 computedIndex1;
-
 		int32 pointerIndex;
-		//int32 pointerX;
-		//int32 pointerIndexY;
 
 		for (int32 row = 0; row < Size - 1; ++row)
 		{
@@ -28,15 +28,10 @@ private:
 			{
 				// column index iterator (left to right)
 				computedIndex0 = (Size * row) + pointerIndex;
-
 				// row index iterator (top to bottom)
 				computedIndex1 = (Size * (Size - pointerIndex - 1)) + (Size - row - 1);
 
 				SwapBitmapAt(computedIndex0, computedIndex1);
-				// swap
-				//BitMap[computedIndex0] += BitMap[computedIndex1];
-				//BitMap[computedIndex1] = BitMap[computedIndex0] - BitMap[computedIndex1];
-				//BitMap[computedIndex0] -= BitMap[computedIndex1];
 			}
 		}
 	}
@@ -54,10 +49,6 @@ private:
 				computedIndex1 = (Size * row) + colEnd;
 
 				SwapBitmapAt(computedIndex0, computedIndex1);
-				// swap values
-				//BitMap[computedIndex0] += BitMap[computedIndex1];
-				//BitMap[computedIndex1]  = BitMap[computedIndex0] - BitMap[computedIndex1];
-				//BitMap[computedIndex0] -= BitMap[computedIndex1];
 			}
 		}
 	}
@@ -70,13 +61,13 @@ private:
 	}
 
 public:
-	static const FTetrominoMatrix I;
-	static const FTetrominoMatrix J;
-	static const FTetrominoMatrix L;
-	static const FTetrominoMatrix S;
-	static const FTetrominoMatrix Z;
-	static const FTetrominoMatrix T;
-	static const FTetrominoMatrix O;
+	//static const FTetrominoMatrix I;
+	//static const FTetrominoMatrix J;
+	//static const FTetrominoMatrix L;
+	//static const FTetrominoMatrix S;
+	//static const FTetrominoMatrix Z;
+	//static const FTetrominoMatrix T;
+	//static const FTetrominoMatrix O;
 
 	int32 GetSize()
 	{
@@ -120,88 +111,95 @@ public:
 	}
 };
 
-/**
- *	3 | 0 0 1 0
- *	2 | 0 0 1 0
- *	1 | 0 0 1 0
- *	0 | 0 0 1 0
- *	  ----------
- *		0 1 2 3
- */
-const FTetrominoMatrix FTetrominoMatrix::I(4,
-	0, 0, 1, 0,
-	0, 0, 1, 0,
-	0, 0, 1, 0,
-	0, 0, 1, 0 );
-
-/**
- *	2 | 0 1 0
- *	1 | 0 1 0
- *	0 | 1 1 0
- *	  --------
- *		0 1 2 
- */
-const FTetrominoMatrix FTetrominoMatrix::J(3,
-	1, 1, 0,
-	0, 1, 0,
-	0, 1, 0);
-
-/**
- *	2 | 0 1 0
- *	1 | 0 1 0
- *	0 | 0 1 1
- *	  --------
- *		0 1 2
- */
-const FTetrominoMatrix FTetrominoMatrix::L(3,
-	0, 1, 1,
-	0, 1, 0,
-	0, 1, 0);
-
-/**
-*	2 | 0 0 0
-*	1 | 0 1 1
-*	0 | 1 1 0
-*	  --------
-*		0 1 2
-*/
-const FTetrominoMatrix FTetrominoMatrix::S(3,
-	1, 1, 0,
-	0, 1, 1,
-	0, 0, 0);
-
-/**
-*	2 | 0 0 0
-*	1 | 1 1 0
-*	0 | 0 1 1
-*	  --------
-*		0 1 2
-*/
-const FTetrominoMatrix FTetrominoMatrix::Z(3,
-	0, 1, 1,
-	1, 1, 0,
-	0, 0, 0);
-
-/**
-*	2 | 0 0 0
-*	1 | 1 1 1
-*	0 | 0 1 0
-*	  --------
-*		0 1 2
-*/
-const FTetrominoMatrix FTetrominoMatrix::T(3,
-	0, 1, 0,
-	1, 1, 1,
-	0, 0, 0);
-
-/**
-*	1 | 1 1
-*	0 | 1 1
-*	  ------
-*		0 1
-*/
-const FTetrominoMatrix FTetrominoMatrix::O(2,
-	1, 1,
-	1, 1);
+///**
+// *	3 | 0 0 1 0
+// *	2 | 0 0 1 0
+// *	1 | 0 0 1 0
+// *	0 | 0 0 1 0
+// *	  ----------
+// *		0 1 2 3
+// */
+//const FTetrominoMatrix FTetrominoMatrix::I(4,
+//	0, 0, 1, 0,
+//	0, 0, 1, 0,
+//	0, 0, 1, 0,
+//	0, 0, 1, 0 );
+//
+///**
+// *	2 | 0 1 0
+// *	1 | 0 1 0
+// *	0 | 1 1 0
+// *	  --------
+// *		0 1 2 
+// */
+//const FTetrominoMatrix FTetrominoMatrix::J(3,
+//	1, 1, 0,
+//	0, 1, 0,
+//	0, 1, 0);
+//
+///**
+// *	2 | 0 1 0
+// *	1 | 0 1 0
+// *	0 | 0 1 1
+// *	  --------
+// *		0 1 2
+// */
+//const FTetrominoMatrix FTetrominoMatrix::L(3,
+//	0, 1, 1,
+//	0, 1, 0,
+//	0, 1, 0);
+//
+///**
+//*	2 | 0 0 0
+//*	1 | 0 1 1
+//*	0 | 1 1 0
+//*	  --------
+//*		0 1 2
+//*/
+//const FTetrominoMatrix FTetrominoMatrix::S(3,
+//	1, 1, 0,
+//	0, 1, 1,
+//	0, 0, 0);
+//
+///**
+//*	2 | 0 0 0
+//*	1 | 1 1 0
+//*	0 | 0 1 1
+//*	  --------
+//*		0 1 2
+//*/
+//const FTetrominoMatrix FTetrominoMatrix::Z(3,
+//	0, 1, 1,
+//	1, 1, 0,
+//	0, 0, 0);
+//
+///**
+//*	2 | 0 0 0
+//*	1 | 1 1 1
+//*	0 | 0 1 0
+//*	  --------
+//*		0 1 2
+//*/
+//const FTetrominoMatrix FTetrominoMatrix::T(3,
+//	0, 1, 0,
+//	1, 1, 1,
+//	0, 0, 0);
+//
+///**
+//*	1 | 1 1
+//*	0 | 1 1
+//*	  ------
+//*		0 1
+//*/
+//const FTetrominoMatrix FTetrominoMatrix::O(2,
+//	1, 1,
+//	1, 1);
 
 // I, J, L, S, Z, T, O
+
+//UClass()
+//class TETRIS3D_API ATetrominoMatrix : public UObject
+//{
+//	GENERATED_BODY()
+//
+//};
