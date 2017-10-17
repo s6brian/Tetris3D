@@ -83,11 +83,6 @@ public:
 		return BitMap;
 	}
 
-	TArray<bool> GetBoolMap()
-	{
-		return BoolMap;
-	}
-
 	void RotateClockwise()
 	{
 		TransposeBitMap();
@@ -100,7 +95,7 @@ public:
 		TransposeBitMap();
 	}
 
-	void InitializeBitmap()
+	FTetrominoMatrix ()
 	{
 		int BoolMapLength = BoolMap.Num();
 		// TODO: should check if length is perfect square
@@ -108,14 +103,21 @@ public:
 
 		for (int idx = 0; idx < BoolMapLength; ++idx)
 		{
-			BitMap.Add(BoolMap[idx] ? 1 : 0);
+			BitMap.Add(BoolMap[idx]? 1: 0);
 		}
 	}
 
-	FORCEINLINE FTetrominoMatrix ()
-	{
-		InitializeBitmap();
-	}
+	//FTetrominoMatrix()
+	//{
+	//	int BoolMapLength = BoolMap.Num();
+	//	// TODO: should check if length is perfect square
+	//	Size = sqrt(BoolMapLength);
+
+	//	for (int idx = 0; idx < BoolMapLength; ++idx)
+	//	{
+	//		BitMap.Add(BoolMap[idx] ? 1 : 0);
+	//	}
+	//}
 
 	//FTetrominoMatrix (int32 PSize, ...)
 	//{

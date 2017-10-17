@@ -16,26 +16,34 @@ public:
 	// Sets default values for this pawn's properties
 	ATetromino();
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bri")
+/**
+ *	VARIABLES | PROPERTIES
+ */
+private:
 	TArray<class UStaticMeshComponent *> Blocks;
-
-	UPROPERTY(EditAnywhere)
-	UStaticMesh * BlockStaticMesh;
-
-	UPROPERTY(EditAnywhere)
-	int32 BlockSize = 100;
-
-	UPROPERTY(EditAnywhere)
-	float BlockScale = 0.9f;
-
+	TArray<FTetrominoMatrix> TetrominoShapesArray;
 	FTetrominoMatrix CurrentBlockMap;
 
+public:
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMesh * BlockStaticMesh;
 
+	UPROPERTY(EditDefaultsOnly)
+	int32 BlockSize = 100;
+
+	UPROPERTY(EditDefaultsOnly)
+	float BlockScale = 0.9f;
+
+/**
+ *	FUNCTIONS
+ */
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
+
+	UFUNCTION(BlueprintCallable)
+	void InitiateTetrominoShapes(TArray<FTetrominoMatrix> TetrominoShapes);
 
 	void GenerateRandomTetromino();
 	void ResetPosition();

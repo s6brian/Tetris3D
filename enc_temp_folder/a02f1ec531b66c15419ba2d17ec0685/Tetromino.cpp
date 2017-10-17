@@ -78,33 +78,11 @@ void ATetromino::Tick(float DeltaTime)
 
 void ATetromino::InitiateTetrominoShapes(TArray<FTetrominoMatrix> TetrominoShapes)
 {
-	//for (int idx = 0; idx < TetrominoShapes.Num(); idx++)
-	//{
-	//	if (GEngine)
-	//	{
-	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("[%d] Init Tetromino Shapes!"), idx));
-	//	}
-	//}
-
-	//for (int idx = 0; idx < TetrominoShapes[0].GetBitMap().Num(); ++idx)
-	//{
-	//	if (GEngine)
-	//	{
-	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("[%d] = %d"), idx, TetrominoShapes[0].GetBitMap()[idx]));
-	//	}
-	//}
-
-	TetrominoShapesArray = TetrominoShapes;
-
-	for (int idx = 0; idx < TetrominoShapesArray.Num(); ++idx)
+	if (GEngine)
 	{
-		//if (GEngine)
-		//{
-		//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("InitializeBitmap!"));
-		//}
-
-		TetrominoShapesArray[idx].InitializeBitmap();
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Init Tetromino Shapes!"));
 	}
+	TetrominoShapesArray = TetrominoShapes;
 }
 
 void ATetromino::GenerateRandomTetromino()
@@ -116,13 +94,13 @@ void ATetromino::GenerateRandomTetromino()
 
 	CurrentBlockMap = TetrominoShapesArray[1];
 
-	//for (int idx = 0; idx < CurrentBlockMap.GetBitMap().Num(); ++idx)
-	//{
-	//	if (GEngine)
-	//	{
-	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("%d"), CurrentBlockMap.GetBitMap()[idx]));
-	//	}
-	//}
+	for (int idx = 0; idx < CurrentBlockMap.GetBitMap().Num(); ++idx)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("%d"), CurrentBlockMap.GetBitMap()[idx]));
+		}
+	}
 
 }
 
