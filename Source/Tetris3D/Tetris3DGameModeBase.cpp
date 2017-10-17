@@ -2,6 +2,7 @@
 
 #include "Tetris3DGameModeBase.h"
 #include "S6PlayerController.h"
+#include "S6Player.h"
 #include "Tetris3DGameStateBase.h"
 #include "Tetromino.h"
 #include "Engine/World.h"
@@ -11,21 +12,46 @@
 
 void ATetris3DGameModeBase::StartPlay()
 {
+	Super::StartPlay();
+
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("StartPlay..."));
 	}
-
-	Super::StartPlay();
 }
+
+void ATetris3DGameModeBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (TetrisGameState)
+	{
+		TetrisGameState->DoTick(DeltaTime);
+	}
+
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("ATetris3DGameModeBase::Tick!"));
+	//}
+}
+
+//void ATetris3DGameModeBase::SetPlayerDefaults(APawn * PlayerPawn)
+//{
+//	if (GEngine)
+//	{
+//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("SetPlayerDefaults..."));
+//	}
+//
+//	AS6Player * S6Player = Cast<AS6Player>(PlayerPawn);
+//
+//	if (S6Player)
+//	{
+//		S6Player->SetNextTetrominoPreview(NextTetromino);
+//	}
+//}
 
 APlayerController* ATetris3DGameModeBase::SpawnPlayerController(ENetRole InRemoteRole, FVector const & SpawnLocation, FRotator const & SpawnRotation)
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("SpawnPlayerController..."));
-	}
-
 	APlayerController* pc = Super::SpawnPlayerController(InRemoteRole, SpawnLocation, SpawnRotation);
 	UWorld * World = this->GetWorld();
 
@@ -59,14 +85,13 @@ APlayerController* ATetris3DGameModeBase::SpawnPlayerController(ENetRole InRemot
 		return pc;
 	}
 
-	FVector  Location = FVector(-450.0f, 50.0f, 100.0f);
+	FVector  Location = FVector (0.0f, 0.0f, 0.0f);//FVector(-450.0f, 50.0f, 100.0f);
 	FRotator Rotation = FRotator(0.0f, 0.0f, 0.0f);
-
-	CurrentTetromino = World->SpawnActor<ATetromino>(TetrominoBPClass, Location, Rotation);
-	NextTetromino = World->SpawnActor<ATetromino>(TetrominoBPClass, FVector(-450.0f, 450.0f, 0.0f), Rotation);
+	CurrentTetromino  = World->SpawnActor<ATetromino>(TetrominoBPClass, Location, Rotation);
+	NextTetromino     = World->SpawnActor<ATetromino>(TetrominoBPClass, Location, Rotation);
 
 	AS6PlayerController * S6PlayerController = Cast<AS6PlayerController>(pc);
-	ATetris3DGameStateBase * TetrisGameState = Cast<ATetris3DGameStateBase>(GameState);
+	TetrisGameState = Cast<ATetris3DGameStateBase>(GameState);
 
 	if (S6PlayerController)
 	{
@@ -76,6 +101,11 @@ APlayerController* ATetris3DGameModeBase::SpawnPlayerController(ENetRole InRemot
 	if (TetrisGameState)
 	{
 		TetrisGameState->SetTetrominoes(CurrentTetromino, NextTetromino);
+	}
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("SpawnPlayerController..."));
 	}
 
 	return pc;

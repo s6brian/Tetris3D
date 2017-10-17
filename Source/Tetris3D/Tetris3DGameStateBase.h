@@ -13,17 +13,31 @@ UCLASS()
 class TETRIS3D_API ATetris3DGameStateBase : public AGameStateBase
 {
 	GENERATED_BODY()
-	
-//protected:
-//	// Called when the game starts or when spawned
-//	virtual void BeginPlay() override;
 
+/**
+ *	CONSTRUCTORS
+ */
+public:
+	ATetris3DGameStateBase();
+
+/**
+ *	PROPERTIES
+ */
 protected:
 	class ATetromino * CurrentTetromino;
 	class ATetromino * NextTetromino;
-	
+
+	float Speed;
+	float LapsedTime;
+
+	FVector2D GridSize;
+	FVector2D GridPosition;
+
+/**
+ *	FUNCTIONS
+ */
 public:
-	virtual void Tick(float DeltaTime) override;
+	void DoTick(float DeltaTime);
 	void SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PNextTetromino);
 
 	

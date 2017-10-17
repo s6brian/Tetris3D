@@ -3,21 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
+//#include "GameFramework/GameModeBase.h"
+#include "GameFramework/GameMode.h"
 #include "Tetris3DGameModeBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TETRIS3D_API ATetris3DGameModeBase : public AGameModeBase
+class TETRIS3D_API ATetris3DGameModeBase : public AGameMode //Base
 {
 	GENERATED_BODY()
 
 protected:
-	virtual void StartPlay() override;
-	virtual APlayerController* SpawnPlayerController(ENetRole InRemoteRole, FVector const & SpawnLocation, FRotator const & SpawnRotation) override;
-
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TSubclassOf<class ATetromino> TetrominoBPClass;
 
@@ -27,5 +25,14 @@ protected:
 	//class AS6PlayerController * S6PlayerController;
 	class ATetromino * CurrentTetromino;
 	class ATetromino * NextTetromino;
+
+	class ATetris3DGameStateBase * TetrisGameState;
+
+protected:
+	virtual void StartPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	//virtual void SetPlayerDefaults(APawn * PlayerPawn) override;
+	virtual APlayerController* SpawnPlayerController(ENetRole InRemoteRole, FVector const & SpawnLocation, FRotator const & SpawnRotation) override;
+
 	
 };

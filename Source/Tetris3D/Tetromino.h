@@ -29,7 +29,7 @@ public:
 	UStaticMesh * BlockStaticMesh;
 
 	UPROPERTY(EditDefaultsOnly)
-	int32 BlockSize = 100;
+	float BlockSize = 100.0f;
 
 	UPROPERTY(EditDefaultsOnly)
 	float BlockScale = 0.9f;

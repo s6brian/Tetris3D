@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "S6Player.h"
+#include "Tetromino.h"
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Math/UnrealMathUtility.h"
-
 
 // Sets default values
 AS6Player::AS6Player()
@@ -21,9 +21,9 @@ AS6Player::AS6Player()
 	OurCameraSpringArm->SetupAttachment(RootComponent);
 	OurCameraSpringArm->SetRelativeLocationAndRotation(FVector(-1500.0f, 0.0f, 200.0f), FRotator(15.0f, 0.0f, 0.0f));
 	//OurCameraSpringArm->SetRelativeLocationAndRotation(FVector(-100.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f));
-	OurCameraSpringArm->TargetArmLength = 400.f;
 	OurCameraSpringArm->bEnableCameraLag = false;//true;
-	OurCameraSpringArm->CameraLagSpeed = 3.0f;
+	OurCameraSpringArm->CameraLagSpeed   = 3.0f;
+	OurCameraSpringArm->TargetArmLength  = 400.f;
 
 	// setup player camera
 	OurCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("GameCamera"));
@@ -59,7 +59,20 @@ void AS6Player::Tick(float DeltaTime)
 		SetActorRotation(NewRotation);
 	}
 
+	//if (NextTetromino)
+	//{
+	//	FVector NewLocation = OurCamera->GetSocketRotation(USpringArmComponent::SocketName).Vector();
+	//	NewLocation.X += 100.f;
+	//	NewLocation.Y += 100.f;
+	//	NextTetromino->SetActorLocation(NewLocation);
+	//}
+
 }
+
+//void AS6Player::SetNextTetrominoPreview(ATetromino * PNextTetromino)
+//{
+//	NextTetromino = PNextTetromino;
+//}
 
 // Called to bind functionality to input
 //void AS6Player::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

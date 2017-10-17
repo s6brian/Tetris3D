@@ -30,12 +30,15 @@ protected:
 	//UPROPERTY(EditAnywhere)
 	class USpringArmComponent* OurCameraSpringArm;
 	class UCameraComponent* OurCamera;
+	//class ATetromino* NextTetromino;
 	
 	//Input variables
 	FVector2D CameraInput;
 	bool bMouseLeftPressed;
 
 public:
+	//void SetNextTetrominoPreview(class ATetromino * PNextTetromino);
+
 	//Input functions
 	void YawCamera(float AxisValue);
 	void OnMouseLeftDown();

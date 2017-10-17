@@ -13,10 +13,10 @@ ATetris3DGameStateBase::ATetris3DGameStateBase()
 
 void ATetris3DGameStateBase::DoTick(float DeltaTime)
 {
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("ATetris3DGameStateBase::Tick!"));
-	//}
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("ATetris3DGameStateBase::Tick!"));
+	}
 
 	if (!CurrentTetromino || !NextTetromino)
 	{
@@ -34,10 +34,10 @@ void ATetris3DGameStateBase::DoTick(float DeltaTime)
 	{
 		LapsedTime += DeltaTime;
 
-		//if (GEngine)
-		//{
-		//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("lapse time: %0.2f"), LapsedTime));
-		//}
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("lapse time: %0.2f"), LapsedTime));
+		}
 	}
 }
 
