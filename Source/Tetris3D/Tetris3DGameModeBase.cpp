@@ -2,6 +2,7 @@
 
 #include "Tetris3DGameModeBase.h"
 #include "S6PlayerController.h"
+#include "Tetris3DGameStateBase.h"
 #include "Tetromino.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
@@ -61,12 +62,20 @@ APlayerController* ATetris3DGameModeBase::SpawnPlayerController(ENetRole InRemot
 	FVector  Location = FVector(-450.0f, 50.0f, 100.0f);
 	FRotator Rotation = FRotator(0.0f, 0.0f, 0.0f);
 
-	Tetromino = World->SpawnActor<ATetromino>(TetrominoBPClass, Location, Rotation);
-	S6PlayerController = Cast<AS6PlayerController>(pc);
+	CurrentTetromino = World->SpawnActor<ATetromino>(TetrominoBPClass, Location, Rotation);
+	NextTetromino = World->SpawnActor<ATetromino>(TetrominoBPClass, FVector(-450.0f, 450.0f, 0.0f), Rotation);
+
+	AS6PlayerController * S6PlayerController = Cast<AS6PlayerController>(pc);
+	ATetris3DGameStateBase * TetrisGameState = Cast<ATetris3DGameStateBase>(GameState);
 
 	if (S6PlayerController)
 	{
-		S6PlayerController->SetTetromino(Tetromino);
+		S6PlayerController->SetTetromino(CurrentTetromino);
+	}
+
+	if (TetrisGameState)
+	{
+		TetrisGameState->SetTetrominoes(CurrentTetromino, NextTetromino);
 	}
 
 	return pc;

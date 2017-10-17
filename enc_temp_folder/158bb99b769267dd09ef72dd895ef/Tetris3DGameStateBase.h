@@ -23,7 +23,6 @@ protected:
 	class ATetromino * NextTetromino;
 	
 public:
-	virtual void Tick(float DeltaTime) override;
 	void SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PNextTetromino);
 
 	

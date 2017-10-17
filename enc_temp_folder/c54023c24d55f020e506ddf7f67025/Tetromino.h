@@ -50,11 +50,10 @@ protected:
 
 public:	
 	// Called every frame
-	//virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override;
 
 	void GenerateRandomTetromino();
 	void SetBitmap(TArray<int32> NewBitmap);
-	//FIntVector4 GetBoundIndex();
 
 	void MoveLeft();
 	void MoveRight();

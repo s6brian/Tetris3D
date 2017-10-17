@@ -75,6 +75,11 @@ public:
 		return BitMap;
 	}
 
+	void SetBitmap(TArray<int32> NewBitmap)
+	{
+		BitMap = NewBitmap;
+	}
+
 	TArray<bool> GetBoolMap()
 	{
 		return BoolMap;
@@ -102,6 +107,9 @@ public:
 		{
 			BitMap.Add(BoolMap[idx] ? 1 : 0);
 		}
+
+		// we can clear out BoolMap as it is only needed by default shapes instances
+		BoolMap.Empty();
 	}
 
 	FORCEINLINE FTetrominoMatrix ()

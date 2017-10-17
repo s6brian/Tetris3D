@@ -24,7 +24,8 @@ protected:
 	//UPROPERTY(EditAnywhere, Category = "Spawning")
 	//TSubclassOf<class AS6PlayerController> S6PlayerControllerBPClass;
 
-	class AS6PlayerController * S6PlayerController;
-	class ATetromino * Tetromino;
+	//class AS6PlayerController * S6PlayerController;
+	class ATetromino * CurrentTetromino;
+	class ATetromino * NextTetromino;
 	
 };

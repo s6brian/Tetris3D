@@ -3,16 +3,10 @@
 #define BLOCKS_COUNT SIZE * SIZE
 
 #include "Tetromino.h"
-//#include "../Utilities/TetrominoMatrix.h"
-//#include "TetrominoMatrix.h"
 #include "Components/InputComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "ConstructorHelpers.h"
-
-
-// TODO: this should be declared in header file
-//FTetrominoMatrix CurrentBlockMap;
 
 // Sets default values
 ATetromino::ATetromino()
@@ -70,11 +64,11 @@ void ATetromino::BeginPlay()
 }
 
 // Called every frame
-void ATetromino::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
+//void ATetromino::Tick(float DeltaTime)
+//{
+//	Super::Tick(DeltaTime);
+//
+//}
 
 void ATetromino::InitiateTetrominoShapes(TArray<FTetrominoMatrix> TetrominoShapes)
 {
@@ -114,7 +108,7 @@ void ATetromino::GenerateRandomTetromino()
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Generate Random Tetromino!"));
 	}
 
-	CurrentBlockMap = TetrominoShapesArray[FMath::RandRange(0, TetrominoShapesArray.Num())];
+	CurrentShape = TetrominoShapesArray[FMath::RandRange(0, TetrominoShapesArray.Num()-1)];
 
 	//for (int idx = 0; idx < CurrentBlockMap.GetBitMap().Num(); ++idx)
 	//{
@@ -126,6 +120,11 @@ void ATetromino::GenerateRandomTetromino()
 
 }
 
+void ATetromino::SetBitmap(TArray<int32> NewBitmap)
+{
+	CurrentShape.SetBitmap(NewBitmap);
+}
+
 void ATetromino::ResetPosition()
 {
 
@@ -133,8 +132,8 @@ void ATetromino::ResetPosition()
 
 void ATetromino::RefreshDisplay()
 {
-	TArray<int32> TetrominoMap = CurrentBlockMap.GetBitMap();
-	int32 TetrominoSize        = CurrentBlockMap.GetSize();
+	TArray<int32> TetrominoMap = CurrentShape.GetBitMap();
+	int32 TetrominoSize        = CurrentShape.GetSize();
 	int32 TetrominoBlockCount  = TetrominoSize * TetrominoSize;
 	int32 ComputedIndex;
 
@@ -196,7 +195,7 @@ void ATetromino::RotateCW()
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Clockwise Rotation!"));
 	//}
 
-	CurrentBlockMap.RotateClockwise();
+	CurrentShape.RotateClockwise();
 	RefreshDisplay();
 }
 
@@ -208,7 +207,7 @@ void ATetromino::RotateCCW()
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Counter-Clockwise Rotation!"));
 	//}
 
-	CurrentBlockMap.RotateCounterClockwise();
+	CurrentShape.RotateCounterClockwise();
 	RefreshDisplay();
 }
 

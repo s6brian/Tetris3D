@@ -2,11 +2,6 @@
 
 #include "Tetris3DGameStateBase.h"
 
-void ATetris3DGameStateBase::Tick(float DeltaTime)
-{
-
-}
-
 void ATetris3DGameStateBase::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PNextTetromino)
 {
 	CurrentTetromino = PCurrentTetromino;

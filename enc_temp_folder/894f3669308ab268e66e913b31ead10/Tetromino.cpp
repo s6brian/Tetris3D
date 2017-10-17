@@ -78,11 +78,33 @@ void ATetromino::Tick(float DeltaTime)
 
 void ATetromino::InitiateTetrominoShapes(TArray<FTetrominoMatrix> TetrominoShapes)
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Init Tetromino Shapes!"));
-	}
+	//for (int idx = 0; idx < TetrominoShapes.Num(); idx++)
+	//{
+	//	if (GEngine)
+	//	{
+	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("[%d] Init Tetromino Shapes!"), idx));
+	//	}
+	//}
+
+	//for (int idx = 0; idx < TetrominoShapes[0].GetBitMap().Num(); ++idx)
+	//{
+	//	if (GEngine)
+	//	{
+	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("[%d] = %d"), idx, TetrominoShapes[0].GetBitMap()[idx]));
+	//	}
+	//}
+
 	TetrominoShapesArray = TetrominoShapes;
+
+	for (int idx = 0; idx < TetrominoShapesArray.Num(); ++idx)
+	{
+		//if (GEngine)
+		//{
+		//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("InitializeBitmap!"));
+		//}
+
+		TetrominoShapesArray[idx].InitializeBitmap();
+	}
 }
 
 void ATetromino::GenerateRandomTetromino()
@@ -92,16 +114,21 @@ void ATetromino::GenerateRandomTetromino()
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Generate Random Tetromino!"));
 	}
 
-	CurrentBlockMap = TetrominoShapesArray[1];
+	CurrentShape = TetrominoShapesArray[FMath::RandRange(0, TetrominoShapesArray.Num()-1)];
 
-	for (int idx = 0; idx < CurrentBlockMap.GetBitMap().Num(); ++idx)
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("%d"), CurrentBlockMap.GetBitMap()[idx]));
-		}
-	}
+	//for (int idx = 0; idx < CurrentBlockMap.GetBitMap().Num(); ++idx)
+	//{
+	//	if (GEngine)
+	//	{
+	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("%d"), CurrentBlockMap.GetBitMap()[idx]));
+	//	}
+	//}
 
+}
+
+void ATetromino::SetBitmap(TArray<int32> NewBitmap)
+{
+	CurrentShape.SetBitmap(NewBitmap);
 }
 
 void ATetromino::ResetPosition()
@@ -111,8 +138,8 @@ void ATetromino::ResetPosition()
 
 void ATetromino::RefreshDisplay()
 {
-	TArray<int32> TetrominoMap = CurrentBlockMap.GetBitMap();
-	int32 TetrominoSize        = CurrentBlockMap.GetSize();
+	TArray<int32> TetrominoMap = CurrentShape.GetBitMap();
+	int32 TetrominoSize        = CurrentShape.GetSize();
 	int32 TetrominoBlockCount  = TetrominoSize * TetrominoSize;
 	int32 ComputedIndex;
 
@@ -174,7 +201,7 @@ void ATetromino::RotateCW()
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Clockwise Rotation!"));
 	//}
 
-	CurrentBlockMap.RotateClockwise();
+	CurrentShape.RotateClockwise();
 	RefreshDisplay();
 }
 
@@ -186,7 +213,7 @@ void ATetromino::RotateCCW()
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Counter-Clockwise Rotation!"));
 	//}
 
-	CurrentBlockMap.RotateCounterClockwise();
+	CurrentShape.RotateCounterClockwise();
 	RefreshDisplay();
 }
 
