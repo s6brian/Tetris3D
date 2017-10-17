@@ -20,14 +20,12 @@ AS6Player::AS6Player()
 	// setup spring arm
 	OurCameraSpringArm->SetupAttachment(RootComponent);
 	OurCameraSpringArm->SetRelativeLocationAndRotation(FVector(-1500.0f, 0.0f, 200.0f), FRotator(15.0f, 0.0f, 0.0f));
-	//OurCameraSpringArm->SetRelativeLocationAndRotation(FVector(-100.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f));
 	OurCameraSpringArm->TargetArmLength = 400.f;
 	OurCameraSpringArm->bEnableCameraLag = false;//true;
 	OurCameraSpringArm->CameraLagSpeed = 3.0f;
 
 	// setup player camera
 	OurCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("GameCamera"));
-	//OurCamera->SetProjectionMode(ECameraProjectionMode::Orthographic);
 	OurCamera->SetupAttachment(OurCameraSpringArm, USpringArmComponent::SocketName);
 
 	//// Set this pawn to be controlled by the lowest-numbered player

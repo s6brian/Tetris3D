@@ -114,7 +114,7 @@ void ATetromino::GenerateRandomTetromino()
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Generate Random Tetromino!"));
 	}
 
-	CurrentBlockMap = TetrominoShapesArray[1];
+	CurrentBlockMap = TetrominoShapesArray[FMath::RandRange(0, TetrominoShapesArray.Num())];
 
 	//for (int idx = 0; idx < CurrentBlockMap.GetBitMap().Num(); ++idx)
 	//{
