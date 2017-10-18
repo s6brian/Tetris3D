@@ -20,5 +20,25 @@ class TETRIS3D_API ATetris3DGameStateBase : public AGameStateBase
 public:
 	ATetris3DGameStateBase();
 
+/**
+ *	PROPERTIES
+ */
+//protected:
+//	class ATetromino * CurrentTetromino;
+//	class ATetromino * NextTetromino;
+//
+//	float Speed;
+//	float LapsedTime;
+//
+//	FVector2D GridSize;
+//	FVector2D GridPosition;
+
+/**
+ *	FUNCTIONS
+ */
+//public:
+//	void DoTick(float DeltaTime);
+//	void SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PNextTetromino);
+
 	
 };

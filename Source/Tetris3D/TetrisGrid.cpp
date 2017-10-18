@@ -1,22 +1,31 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #define SPEED_FACTOR 2.0f
 
-#include "Tetris3DGameStateBase.h"
+#include "TetrisGrid.h"
 #include "Tetromino.h"
 
-ATetris3DGameStateBase::ATetris3DGameStateBase()
+
+// Sets default values
+ATetrisGrid::ATetrisGrid()
 {
-	Speed		 = 5.0f;
-	GridSize	 = FVector2D (10.0f, 20.0f);
-	GridPosition = FVector2D ();
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	Speed = 5.0f;
+	Dimension = FVector2D(10.0f, 20.0f);
 }
 
-void ATetris3DGameStateBase::DoTick(float DeltaTime)
+// Called when the game starts or when spawned
+void ATetrisGrid::BeginPlay()
 {
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("ATetris3DGameStateBase::Tick!"));
-	//}
+	Super::BeginPlay();
+	
+}
+
+// Called every frame
+void ATetrisGrid::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 
 	if (!CurrentTetromino || !NextTetromino)
 	{
@@ -34,7 +43,7 @@ void ATetris3DGameStateBase::DoTick(float DeltaTime)
 		{
 			// reset
 			NewLocation = CurrentTetromino->GetActorLocation();
-			NewLocation.Z -= CurrentTetromino->BlockSize * GridSize.Y;
+			NewLocation.Z = CurrentTetromino->BlockSize * Dimension.Y;
 			CurrentTetromino->SetActorLocation(NewLocation);
 
 			CurrentTetromino->Copy(NextTetromino);
@@ -44,15 +53,11 @@ void ATetris3DGameStateBase::DoTick(float DeltaTime)
 	else
 	{
 		LapsedTime += DeltaTime;
-
-		//if (GEngine)
-		//{
-		//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("lapse time: %0.2f"), LapsedTime));
-		//}
 	}
+
 }
 
-void ATetris3DGameStateBase::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PNextTetromino)
+void ATetrisGrid::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PNextTetromino)
 {
 	CurrentTetromino = PCurrentTetromino;
 	NextTetromino = PNextTetromino;
@@ -68,9 +73,9 @@ void ATetris3DGameStateBase::SetTetrominoes(ATetromino * PCurrentTetromino, ATet
 	}
 
 	LapsedTime = 0.0f;
-	GridPosition = FVector2D(4.0f, 10.0f);
+	Point = FVector2D(4.0f, Dimension.Y);
 
-	CurrentTetromino->SetActorLocation(FVector(0.0f, CurrentTetromino->BlockSize * GridPosition.X, CurrentTetromino->BlockSize * GridPosition.Y));
+	CurrentTetromino->SetActorLocation(FVector(0.0f, CurrentTetromino->BlockSize * Point.X, CurrentTetromino->BlockSize * Point.Y));
 	NextTetromino->SetActorLocation(FVector(0.0f, -450.0f, 200.0f));
 
 	if (GEngine)
@@ -78,5 +83,4 @@ void ATetris3DGameStateBase::SetTetrominoes(ATetromino * PCurrentTetromino, ATet
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("GameState Set Tetrominoes..."));
 	}
 }
-
 
