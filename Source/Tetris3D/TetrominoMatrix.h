@@ -60,6 +60,12 @@ private:
 		BitMap[IndexA] -= BitMap[IndexB];
 	}
 
+	// TODO: should check if length is perfect square
+	void SetSize(int32 MapLength)
+	{
+		Size = sqrt(MapLength);
+	}
+
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<bool> BoolMap;
@@ -78,6 +84,7 @@ public:
 	void SetBitmap(TArray<int32> NewBitmap)
 	{
 		BitMap = NewBitmap;
+		SetSize(NewBitmap.Num());
 	}
 
 	TArray<bool> GetBoolMap()
@@ -100,8 +107,7 @@ public:
 	void InitializeBitmap()
 	{
 		int BoolMapLength = BoolMap.Num();
-		// TODO: should check if length is perfect square
-		Size = sqrt(BoolMapLength);
+		SetSize(BoolMapLength);
 
 		for (int idx = 0; idx < BoolMapLength; ++idx)
 		{

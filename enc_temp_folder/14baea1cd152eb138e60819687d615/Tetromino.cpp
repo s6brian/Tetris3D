@@ -58,8 +58,9 @@ void ATetromino::PostInitializeComponents()
 void ATetromino::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	GenerateRandomTetromino();
-	//RefreshDisplay();
+	RefreshDisplay();
 }
 
 // Called every frame
@@ -104,11 +105,10 @@ void ATetromino::GenerateRandomTetromino()
 {
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Generate Random Tetromino!"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Generate Random Tetromino!"));
 	}
 
 	CurrentShape = TetrominoShapesArray[FMath::RandRange(0, TetrominoShapesArray.Num()-1)];
-	RefreshDisplay();
 
 	//for (int idx = 0; idx < CurrentBlockMap.GetBitMap().Num(); ++idx)
 	//{

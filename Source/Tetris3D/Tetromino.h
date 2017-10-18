@@ -54,6 +54,7 @@ public:
 
 	void GenerateRandomTetromino();
 	void SetBitmap(TArray<int32> NewBitmap);
+	void Copy(ATetromino * OtherTetromino);
 	//FIntVector4 GetBoundIndex();
 
 	void MoveLeft();

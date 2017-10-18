@@ -19,7 +19,7 @@ AS6Player::AS6Player()
 	
 	// setup spring arm
 	OurCameraSpringArm->SetupAttachment(RootComponent);
-	OurCameraSpringArm->SetRelativeLocationAndRotation(FVector(-2800.0f, 0.0f, 1000.0f), FRotator(0.0f, 0.0f, 0.0f));
+	OurCameraSpringArm->SetRelativeLocationAndRotation(FVector(-1500.0f, 0.0f, 200.0f), FRotator(15.0f, 0.0f, 0.0f));
 	//OurCameraSpringArm->SetRelativeLocationAndRotation(FVector(-100.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f));
 	OurCameraSpringArm->bEnableCameraLag = false;//true;
 	OurCameraSpringArm->CameraLagSpeed   = 3.0f;

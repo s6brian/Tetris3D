@@ -6,7 +6,7 @@
 
 ATetris3DGameStateBase::ATetris3DGameStateBase()
 {
-	Speed		 = 1.0f;
+	Speed		 = 5.0f;
 	GridSize	 = FVector2D (10.0f, 20.0f);
 	GridPosition = FVector2D ();
 }
@@ -29,6 +29,17 @@ void ATetris3DGameStateBase::DoTick(float DeltaTime)
 		FVector NewLocation = CurrentTetromino->GetActorLocation();
 		NewLocation.Z -= CurrentTetromino->BlockSize;
 		CurrentTetromino->SetActorLocation(NewLocation);
+
+		if (NewLocation.Z <= 0.0f)
+		{
+			// reset
+			NewLocation = CurrentTetromino->GetActorLocation();
+			NewLocation.Z = CurrentTetromino->BlockSize * GridSize.Y;
+			CurrentTetromino->SetActorLocation(NewLocation);
+
+			CurrentTetromino->Copy(NextTetromino);
+			NextTetromino->GenerateRandomTetromino();
+		}
 	}
 	else
 	{

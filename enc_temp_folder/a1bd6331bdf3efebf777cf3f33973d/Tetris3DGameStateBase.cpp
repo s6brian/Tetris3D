@@ -6,17 +6,17 @@
 
 ATetris3DGameStateBase::ATetris3DGameStateBase()
 {
-	Speed		 = 1.0f;
+	Speed		 = 5.0f;
 	GridSize	 = FVector2D (10.0f, 20.0f);
 	GridPosition = FVector2D ();
 }
 
 void ATetris3DGameStateBase::DoTick(float DeltaTime)
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("ATetris3DGameStateBase::Tick!"));
-	}
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("ATetris3DGameStateBase::Tick!"));
+	//}
 
 	if (!CurrentTetromino || !NextTetromino)
 	{
@@ -29,15 +29,26 @@ void ATetris3DGameStateBase::DoTick(float DeltaTime)
 		FVector NewLocation = CurrentTetromino->GetActorLocation();
 		NewLocation.Z -= CurrentTetromino->BlockSize;
 		CurrentTetromino->SetActorLocation(NewLocation);
+
+		if (NewLocation.Z <= 0.0f)
+		{
+			// reset
+			NewLocation = CurrentTetromino->GetActorLocation();
+			NewLocation.Z -= CurrentTetromino->BlockSize * GridSize.Y;
+			CurrentTetromino->SetActorLocation(NewLocation);
+
+			CurrentTetromino->Copy(NextTetromino);
+			NextTetromino->GenerateRandomTetromino();
+		}
 	}
 	else
 	{
 		LapsedTime += DeltaTime;
 
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("lapse time: %0.2f"), LapsedTime));
-		}
+		//if (GEngine)
+		//{
+		//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("lapse time: %0.2f"), LapsedTime));
+		//}
 	}
 }
 
