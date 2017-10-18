@@ -49,6 +49,9 @@ protected:
 	void RefreshDisplay();
 
 public:	
+	// Called every frame
+	//virtual void Tick(float DeltaTime) override;
+
 	void GenerateRandomTetromino();
 	void SetBitmap(TArray<int32> NewBitmap);
 	void Copy(ATetromino * OtherTetromino);

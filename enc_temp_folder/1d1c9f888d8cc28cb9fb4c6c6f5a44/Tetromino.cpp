@@ -4,6 +4,7 @@
 
 #include "Tetromino.h"
 #include "Components/InputComponent.h"
+//#include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "ConstructorHelpers.h"
 
@@ -12,24 +13,44 @@ ATetromino::ATetromino()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+
+	UStaticMeshComponent * BlockStaticMeshComponent;
+	for (int32 idx = 0; idx < BLOCKS_COUNT; ++idx)
+	{
+		//if (GEngine)
+		//{
+		//	GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Blue, FString::Printf(TEXT("col: %d, row: %d"), (idx % SIZE), (idx / SIZE)));
+		//	GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Red, FString::Printf(TEXT("y: %0.2f, z: %0.2f"), BlockSize * (idx % SIZE), BlockSize * (idx / SIZE)));
+		//}
+
+		BlockStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName(*FString::Printf(TEXT("Block_%d"), idx)));
+		BlockStaticMeshComponent->SetupAttachment(RootComponent);
+		BlockStaticMeshComponent->SetRelativeLocation(FVector(0.0f, BlockSize * (idx % SIZE), BlockSize * (idx / SIZE)));
+		BlockStaticMeshComponent->SetWorldScale3D(FVector(BlockScale));
+		BlockStaticMeshComponent->SetVisibility(false);
+		Blocks.Add(BlockStaticMeshComponent);
+	}
+}
 
 void ATetromino::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	AutoPossessPlayer = EAutoReceiveInput::Disabled;
 
-	UStaticMeshComponent * BlockStaticMeshComponent;
-	for (int32 Index = 0; Index < BLOCKS_COUNT; ++Index)
+	if (BlockStaticMesh)
 	{
-		BlockStaticMeshComponent = NewObject<UStaticMeshComponent>(this, FName(*FString::Printf(TEXT("Block_%d"), Index))); //CreateDefaultSubobject<UStaticMeshComponent>(FName(*FString::Printf(TEXT("Block_%d"), idx)));
-		BlockStaticMeshComponent->SetupAttachment(RootComponent);
-		BlockStaticMeshComponent->SetRelativeLocation(FVector(0.0f, BlockSize * (Index % SIZE), BlockSize * (Index / SIZE)));
-		BlockStaticMeshComponent->SetWorldScale3D(FVector(BlockScale));
-		BlockStaticMeshComponent->SetStaticMesh(BlockStaticMesh);
-		BlockStaticMeshComponent->SetVisibility(false);
-		BlockStaticMeshComponent->RegisterComponent();
-
-		Blocks.Add(BlockStaticMeshComponent);
+		for (int32 idx = 0; idx < BLOCKS_COUNT; ++idx)
+		{
+			Blocks[idx]->SetStaticMesh(BlockStaticMesh);
+		}
+	}
+	else
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("BlockStaticMesh does not exist!"));
+		}
 	}
 }
 
@@ -38,14 +59,43 @@ void ATetromino::BeginPlay()
 {
 	Super::BeginPlay();
 	GenerateRandomTetromino();
+	//RefreshDisplay();
 }
+
+// Called every frame
+//void ATetromino::Tick(float DeltaTime)
+//{
+//	Super::Tick(DeltaTime);
+//
+//}
 
 void ATetromino::InitiateTetrominoShapes(TArray<FTetrominoMatrix> TetrominoShapes)
 {
+	//for (int idx = 0; idx < TetrominoShapes.Num(); idx++)
+	//{
+	//	if (GEngine)
+	//	{
+	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("[%d] Init Tetromino Shapes!"), idx));
+	//	}
+	//}
+
+	//for (int idx = 0; idx < TetrominoShapes[0].GetBitMap().Num(); ++idx)
+	//{
+	//	if (GEngine)
+	//	{
+	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("[%d] = %d"), idx, TetrominoShapes[0].GetBitMap()[idx]));
+	//	}
+	//}
+
 	TetrominoShapesArray = TetrominoShapes;
 
 	for (int idx = 0; idx < TetrominoShapesArray.Num(); ++idx)
 	{
+		//if (GEngine)
+		//{
+		//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("InitializeBitmap!"));
+		//}
+
 		TetrominoShapesArray[idx].InitializeBitmap();
 	}
 }
@@ -59,6 +109,15 @@ void ATetromino::GenerateRandomTetromino()
 
 	CurrentShape = TetrominoShapesArray[FMath::RandRange(0, TetrominoShapesArray.Num()-1)];
 	RefreshDisplay();
+
+	//for (int idx = 0; idx < CurrentBlockMap.GetBitMap().Num(); ++idx)
+	//{
+	//	if (GEngine)
+	//	{
+	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("%d"), CurrentBlockMap.GetBitMap()[idx]));
+	//	}
+	//}
+
 }
 
 void ATetromino::SetBitmap(TArray<int32> NewBitmap)

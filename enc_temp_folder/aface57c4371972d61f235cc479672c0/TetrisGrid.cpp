@@ -9,25 +9,38 @@
 // Sets default values
 ATetrisGrid::ATetrisGrid()
 {
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("[ATetrisGrid Constructor] Dimension: (%0.2f, %0.2f)"), Dimension.X, Dimension.Y));
-	//}
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("[ATetrisGrid Constructor] Dimension: (%0.2f, %0.2f)"), Dimension.X, Dimension.Y));
+	}
 
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false; //true;
+	Speed = 5.0f;
+	//Dimension = FVector2D(10.0f, 20.0f);
+
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 }
 
-void ATetrisGrid::PostInitializeComponents()
+void ATetrisGrid::PostActorCreated()
 {
-	Super::PostInitializeComponents();
+	Super::PostActorCreated();
 
+	if (GEngine)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("[PostActorCreated] Dimension: (%0.2f, %0.2f)"), Dimension.X, Dimension.Y));
+		if (BlockStaticMesh)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("[PostActorCreated] BlockStaticMesh Exist!"));
+		}
+	}
+	
 	UStaticMeshComponent * BlockStaticMeshComponent;
 	int32 BlocksCount = Dimension.X * Dimension.Y;
 
 	for (int32 Index = 0; Index < BlocksCount; ++Index)
 	{
-		BlockStaticMeshComponent = NewObject<UStaticMeshComponent>(this, FName(*FString::Printf(TEXT("Block_%d"), Index)));
+		BlockStaticMeshComponent = NewNamedObject<UStaticMeshComponent>(this, FName(*FString::Printf(TEXT("Block_%d"), Index)));
 
 		if (BlockStaticMeshComponent)
 		{
@@ -35,18 +48,38 @@ void ATetrisGrid::PostInitializeComponents()
 			BlockStaticMeshComponent->SetRelativeLocation(FVector(0.0f, BlockSize * (Index % (int32)Dimension.X), BlockSize * (Index / Dimension.X)));
 			BlockStaticMeshComponent->SetWorldScale3D(FVector(BlockScale));
 			BlockStaticMeshComponent->SetStaticMesh(BlockStaticMesh);
-			BlockStaticMeshComponent->SetVisibility(false);
-			BlockStaticMeshComponent->RegisterComponent();
+			BlockStaticMeshComponent->SetVisibility(true);
 
-			//if (GEngine)
-			//{
-			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("Add Block_%d at (%0.2f, %0.2f, %0.2f)"), Index, 0.0f, BlockSize * (Index % (int32)Dimension.X), BlockSize * (Index / Dimension.X)));
-			//}
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("Add Block_%d"), Index));
+			}
 
 			Blocks.Add(BlockStaticMeshComponent);
 			BitMap.Add(0);
 		}
 	}
+}
+
+void ATetrisGrid::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	//int32 BlocksCount = Blocks.Num(); //Dimension.X * Dimension.Y;
+
+	//if (BlockStaticMesh)
+	//{
+	//	for (int32 idx = 0; idx < BlocksCount; ++idx)
+	//	{
+	//		Blocks[idx]->SetStaticMesh(BlockStaticMesh);
+	//	}
+	//}
+	//else
+	//{
+	//	if (GEngine)
+	//	{
+	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Missing BlockStaticMesh!"));
+	//	}
+	//}
 }
 
 // Called when the game starts or when spawned
@@ -117,6 +150,4 @@ void ATetrisGrid::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PN
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("GameState Set Tetrominoes..."));
 	}
 }
-
-
 

@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "ConstructorHelpers.h"
 
+ATetrisGrid * TetrisGrid;
 
 void ATetris3DGameModeBase::StartPlay()
 {
@@ -61,7 +62,7 @@ APlayerController* ATetris3DGameModeBase::SpawnPlayerController(ENetRole InRemot
 	CurrentTetromino  = World->SpawnActor<ATetromino>(TetrominoBPClass, Location, Rotation);
 	NextTetromino     = World->SpawnActor<ATetromino>(TetrominoBPClass, Location, Rotation);
 
-	ATetrisGrid * TetrisGrid = World->SpawnActor<ATetrisGrid>(TetrisGridBPClass, Location, Rotation);
+	TetrisGrid = World->SpawnActor<ATetrisGrid>(TetrisGridBPClass, Location, Rotation);
 
 	AS6PlayerController * S6PlayerController = Cast<AS6PlayerController>(pc);
 

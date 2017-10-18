@@ -22,6 +22,7 @@ protected:
 	class ATetromino * CurrentTetromino;
 	class ATetromino * NextTetromino;
 
+	float Speed;
 	float LapsedTime;
 
 	TArray<int32> BitMap;
@@ -42,9 +43,6 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	float BlockScale;// = 0.9f;
 
-	UPROPERTY(EditDefaultsOnly)
-	float Speed;
-
 
 /**
  *	FUNCTIONS
@@ -52,6 +50,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void PostActorCreated() override;
 	virtual void PostInitializeComponents() override;
 
 public:	
