@@ -54,20 +54,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
 
-	void UpdateTetrominoPosition();
-	void TryTetrominoDropOnce();
-	void StartMergeTimer();
-	bool DidHitABlock();
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PNextTetromino);
-
-	// Controls
-	void TryTetrominoMoveLeft();
-	void TryTetrominoMoveRight();
-	void TryTetrominoRotateCW();
-	void TryTetrominoRotateCCW();
 
 };

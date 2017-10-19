@@ -64,7 +64,7 @@ APlayerController* ATetris3DGameModeBase::SpawnPlayerController(ENetRole InRemot
 
 	if (S6PlayerController)
 	{
-		//S6PlayerController->SetTetromino(CurrentTetromino);
+		S6PlayerController->SetTetromino(CurrentTetromino);
 		S6PlayerController->SetTetrisGrid(TetrisGrid);
 	}
 

@@ -2,7 +2,7 @@
 
 #include "S6PlayerController.h"
 #include "S6Player.h"
-//#include "Tetromino.h"
+#include "Tetromino.h"
 #include "TetrisGrid.h"
 #include "Engine/World.h"
 
@@ -11,10 +11,10 @@ void AS6PlayerController::BeginPlayingState()
 	S6Player = Cast<AS6Player>(this->GetPawn());
 }
 
-//void AS6PlayerController::SetTetromino(ATetromino * PTetromino)
-//{
-//	Tetromino = PTetromino;
-//}
+void AS6PlayerController::SetTetromino(ATetromino * PTetromino)
+{
+	Tetromino = PTetromino;
+}
 
 void AS6PlayerController::SetTetrisGrid(ATetrisGrid * PTetrisGrid)
 {
@@ -86,14 +86,9 @@ void AS6PlayerController::OnPressA()
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed A!"));
 	//}
 
-	//if (Tetromino)
-	//{
-	//	Tetromino->MoveLeft();
-	//}
-
-	if (TetrisGrid)
+	if (Tetromino)
 	{
-		TetrisGrid->TryTetrominoMoveLeft();
+		Tetromino->MoveLeft();
 	}
 }
 
@@ -104,14 +99,9 @@ void AS6PlayerController::OnPressD()
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed D!"));
 	//}
 
-	//if (Tetromino)
-	//{
-	//	Tetromino->MoveRight();
-	//}
-
-	if (TetrisGrid)
+	if (Tetromino)
 	{
-		TetrisGrid->TryTetrominoMoveRight();
+		Tetromino->MoveRight();
 	}
 }
 
@@ -122,14 +112,9 @@ void AS6PlayerController::OnPressE()
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed E!"));
 	//}
 
-	//if (Tetromino)
-	//{
-	//	Tetromino->RotateCW();
-	//}
-
-	if (TetrisGrid)
+	if (Tetromino)
 	{
-		TetrisGrid->TryTetrominoRotateCW();
+		Tetromino->RotateCW();
 	}
 }
 
@@ -140,14 +125,9 @@ void AS6PlayerController::OnPressQ()
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Pressed Q!"));
 	//}
 
-	//if (Tetromino)
-	//{
-	//	Tetromino->RotateCCW();
-	//}
-
-	if (TetrisGrid)
+	if (Tetromino)
 	{
-		TetrisGrid->TryTetrominoRotateCCW();
+		Tetromino->RotateCCW();
 	}
 }
 

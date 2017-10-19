@@ -19,7 +19,7 @@ protected:
 	virtual void BeginPlayingState() override;
 
 protected:
-	//class ATetromino  * Tetromino;
+	class ATetromino  * Tetromino;
 	class ATetrisGrid * TetrisGrid;
 	class AS6Player   * S6Player;
 

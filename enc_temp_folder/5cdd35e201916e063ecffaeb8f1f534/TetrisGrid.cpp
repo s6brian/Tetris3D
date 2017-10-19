@@ -69,7 +69,20 @@ void ATetrisGrid::Tick(float DeltaTime)
 	if (LapsedTime >= SPEED_FACTOR / Speed)
 	{
 		LapsedTime = 0.0f;
-		TryTetrominoDropOnce();
+		FVector NewLocation = CurrentTetromino->GetActorLocation();
+		NewLocation.Z -= CurrentTetromino->BlockSize;
+		CurrentTetromino->SetActorLocation(NewLocation);
+
+		if (NewLocation.Z <= 0.0f)
+		{
+			// reset
+			NewLocation = CurrentTetromino->GetActorLocation();
+			NewLocation.Z = CurrentTetromino->BlockSize * Dimension.Y;
+			CurrentTetromino->SetActorLocation(NewLocation);
+
+			CurrentTetromino->Copy(NextTetromino);
+			NextTetromino->GenerateRandomTetromino();
+		}
 	}
 	else
 	{
@@ -105,97 +118,5 @@ void ATetrisGrid::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PN
 	}
 }
 
-void ATetrisGrid::UpdateTetrominoPosition()
-{
-	FVector NewLocation = CurrentTetromino->GetActorLocation();
-	NewLocation.Y = CurrentTetromino->BlockSize * Point.X;
-	NewLocation.Z = CurrentTetromino->BlockSize * Point.Y;
-	CurrentTetromino->SetActorLocation(NewLocation);
-}
-
-void ATetrisGrid::StartMergeTimer()
-{
-
-}
-
-bool ATetrisGrid::DidHitABlock()
-{
-	bool HasHit = false;
-
-	return HasHit;
-}
-
-void ATetrisGrid::TryTetrominoDropOnce()
-{
-	Point.Y -= 1.0f;
-
-	if (DidHitABlock())
-	{
-		Point.Y += 1.0f;
-
-		// start merge timer
-	}
-	else
-	{
-		UpdateTetrominoPosition();
-
-		//FVector NewLocation = CurrentTetromino->GetActorLocation();
-		//NewLocation.Z = CurrentTetromino->BlockSize * Point.Y;
-		//CurrentTetromino->SetActorLocation(NewLocation);
-
-		//if (NewLocation.Z <= 0.0f)
-		//{
-		//	// reset
-		//	NewLocation = CurrentTetromino->GetActorLocation();
-		//	NewLocation.Z = CurrentTetromino->BlockSize * Dimension.Y;
-		//	CurrentTetromino->SetActorLocation(NewLocation);
-
-		//	CurrentTetromino->Copy(NextTetromino);
-		//	NextTetromino->GenerateRandomTetromino();
-		//}
-	}
-}
-
-void ATetrisGrid::TryTetrominoMoveLeft()
-{
-	Point.X -= 1.0f;
-
-	if (DidHitABlock())
-	{
-		Point.X += 1.0f;
-	}
-	else
-	{
-		UpdateTetrominoPosition();
-	}
-}
-
-void ATetrisGrid::TryTetrominoMoveRight()
-{
-	Point.X += 1.0f;
-
-	if (DidHitABlock())
-	{
-		Point.X -= 1.0f;
-	}
-	else
-	{
-		UpdateTetrominoPosition();
-	}
-}
-
-void ATetrisGrid::TryTetrominoRotateCW()
-{
-	CurrentTetromino->RotateCW();
-
-	// TODO: check if kick is necessary
-}
-
-void ATetrisGrid::TryTetrominoRotateCCW()
-{
-	CurrentTetromino->RotateCCW();
-
-	// TODO: check if kick is necessary
-}
 
 
