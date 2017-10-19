@@ -15,7 +15,7 @@ ATetrisGrid::ATetrisGrid()
 	//}
 
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false; //true;
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void ATetrisGrid::PostInitializeComponents()
@@ -32,7 +32,7 @@ void ATetrisGrid::PostInitializeComponents()
 		if (BlockStaticMeshComponent)
 		{
 			BlockStaticMeshComponent->SetupAttachment(RootComponent);
-			BlockStaticMeshComponent->SetRelativeLocation(FVector(0.0f, BlockSize * (Index % (int32)Dimension.X), BlockSize * (Index / Dimension.X)));
+			BlockStaticMeshComponent->SetRelativeLocation(FVector(0.0f, BlockSize * (Index % (int32)Dimension.X), BlockSize * ((Index + 1) / (int32)Dimension.X)));
 			BlockStaticMeshComponent->SetWorldScale3D(FVector(BlockScale));
 			BlockStaticMeshComponent->SetStaticMesh(BlockStaticMesh);
 			BlockStaticMeshComponent->SetVisibility(false);

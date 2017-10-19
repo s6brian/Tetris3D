@@ -21,8 +21,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ATetrisGrid> TetrisGridBPClass;
 
-	class ATetromino * CurrentTetromino;
-	class ATetromino * NextTetromino;
+	//class ATetromino * CurrentTetromino;
+	//class ATetromino * NextTetromino;
 
 protected:
 	virtual void StartPlay() override;

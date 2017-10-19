@@ -10,8 +10,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "ConstructorHelpers.h"
 
-ATetrisGrid * TetrisGrid;
-
 void ATetris3DGameModeBase::StartPlay()
 {
 	Super::StartPlay();
@@ -57,13 +55,11 @@ APlayerController* ATetris3DGameModeBase::SpawnPlayerController(ENetRole InRemot
 		return pc;
 	}
 
-	FVector  Location = FVector (0.0f, 0.0f, 0.0f);//FVector(-450.0f, 50.0f, 100.0f);
-	FRotator Rotation = FRotator(0.0f, 0.0f, 0.0f);
-	CurrentTetromino  = World->SpawnActor<ATetromino>(TetrominoBPClass, Location, Rotation);
-	NextTetromino     = World->SpawnActor<ATetromino>(TetrominoBPClass, Location, Rotation);
-
-	TetrisGrid = World->SpawnActor<ATetrisGrid>(TetrisGridBPClass, Location, Rotation);
-
+	FVector               Location           = FVector (0.0f, 0.0f, 0.0f);//FVector(-450.0f, 50.0f, 100.0f);
+	FRotator              Rotation           = FRotator(0.0f, 0.0f, 0.0f);
+	ATetromino          * CurrentTetromino   = World->SpawnActor<ATetromino >(TetrominoBPClass , Location, Rotation);
+	ATetromino          * NextTetromino      = World->SpawnActor<ATetromino >(TetrominoBPClass , Location, Rotation);
+	ATetrisGrid         * TetrisGrid         = World->SpawnActor<ATetrisGrid>(TetrisGridBPClass, Location, Rotation);
 	AS6PlayerController * S6PlayerController = Cast<AS6PlayerController>(pc);
 
 	if (S6PlayerController)
