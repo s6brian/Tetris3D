@@ -33,6 +33,10 @@ protected:
 
 	float LapsedTime;
 
+	bool IsClearing;
+	int32 ColumnIndex;
+	TArray<int32> RowIndeces;
+
 	TArray<int32> BitMap;
 	TArray<class UStaticMeshComponent *> Blocks;
 
@@ -64,11 +68,11 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
 
-	void UpdateTetrominoPosition();
-	void TryTetrominoDropOnce();
-	void StartMergeTimer();
-	void ClearRowAnimation();
+	void TryTetrominoDropOnce(float DeltaTime);
+	void ClearRowAnimation(float DeltaTime);
 	void GridCleanup();
+	void StartMergeTimer();
+	void UpdateTetrominoPosition();
 
 	bool DidHitABlock();
 

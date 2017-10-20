@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #define SPEED_FACTOR 2.0f
+#define CLEAR_ROW_FPS (1.0f / 60.0f)
 
 #include "TetrisGrid.h"
 #include "Tetromino.h"
 #include "Components/StaticMeshComponent.h"
-
 
 // Sets default values
 ATetrisGrid::ATetrisGrid()
@@ -17,6 +17,7 @@ ATetrisGrid::ATetrisGrid()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	CurrentGridState = Default;
+	IsClearing = false;
 }
 
 void ATetrisGrid::PostInitializeComponents()
@@ -75,7 +76,7 @@ void ATetrisGrid::Tick(float DeltaTime)
 	
 	case EGridState::ClearRowAnimation:
 	{
-		ClearRowAnimation();
+		ClearRowAnimation(DeltaTime);
 		break;
 	}
 
@@ -87,15 +88,15 @@ void ATetrisGrid::Tick(float DeltaTime)
 
 	default:
 	{
-		if (LapsedTime >= SPEED_FACTOR / Speed)
-		{
-			LapsedTime = 0.0f;
-			TryTetrominoDropOnce();
-		}
-		else
-		{
-			LapsedTime += DeltaTime;
-		}
+		//if (LapsedTime >= SPEED_FACTOR / Speed)
+		//{
+		//	LapsedTime = 0.0f;
+			TryTetrominoDropOnce(DeltaTime);
+		//}
+		//else
+		//{
+		//	LapsedTime += DeltaTime;
+		//}
 
 		break;
 	}}
@@ -158,13 +159,74 @@ void ATetrisGrid::StartMergeTimer()
 
 	LapsedTime = 0.0f;
 	CurrentGridState = EGridState::ClearRowAnimation;
+	//CurrentGridState = EGridState::ClearRowCleanup;
 }
 
-void ATetrisGrid::ClearRowAnimation()
+void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 {
+	if (IsClearing)
+	{
+		// hide 1 column at a time
+		if (LapsedTime <= CLEAR_ROW_FPS)
+		{
+			LapsedTime += DeltaTime;
+			return;
+		}
 
+		int32 ComputedIndex = 0;
+		
+		for (int32 Index = RowIndeces.Num()-1; Index >= 0; Index -= 2)
+		{
+			ComputedIndex = (RowIndeces[Index] * Dimension.X) + ColumnIndex;
 
-	CurrentGridState = EGridState::ClearRowCleanup;
+			BitMap[ComputedIndex] = 0;
+			Blocks[ComputedIndex]->SetVisibility(false);
+
+			if (Index - 1 < 0)
+			{
+				continue;
+			}
+
+			ComputedIndex = (RowIndeces[Index - 1] * Dimension.X) + (Dimension.X - ColumnIndex - 1);
+			BitMap[ComputedIndex] = 0;
+			Blocks[ComputedIndex]->SetVisibility(false);
+		}
+
+		ColumnIndex++;
+		LapsedTime = 0.0f;
+		
+	}
+	else // cache row indeces to be cleared
+	{
+		int32 RowValue = 0;
+		ColumnIndex    = 0;
+		RowIndeces.Empty();
+
+		for (int32 Row = 0; Row < Dimension.Y; ++Row)
+		{
+			RowValue = 0;
+
+			for (int32 Col = 0; Col < Dimension.X; ++Col)
+			{
+				RowValue += BitMap[(Row * Dimension.X) + Col];
+			}
+
+			if (RowValue == Dimension.X)
+			{
+				RowIndeces.Add(Row);
+			}
+		}
+
+		IsClearing = RowIndeces.Num() > 0;
+	}
+
+	if (!IsClearing || ColumnIndex >= Dimension.X)
+	{
+		LapsedTime       = 0.0f;
+		ColumnIndex      = 0;
+		IsClearing       = false;
+		CurrentGridState = EGridState::ClearRowCleanup;
+	}
 }
 
 void ATetrisGrid::GridCleanup()
@@ -201,8 +263,15 @@ bool ATetrisGrid::DidHitABlock()
 	return false;
 }
 
-void ATetrisGrid::TryTetrominoDropOnce()
+void ATetrisGrid::TryTetrominoDropOnce(float DeltaTime)
 {
+	if (LapsedTime <= SPEED_FACTOR / Speed)
+	{
+		LapsedTime += DeltaTime;
+		return;
+	}
+
+	LapsedTime = 0.0f;
 	Point.Y -= 1.0f;
 
 	if (DidHitABlock())
