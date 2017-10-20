@@ -70,13 +70,13 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<bool> BoolMap;
 
-	int32 GetSize()
+	int32 GetSize() const
 	{
 		return Size;
 	}
 
 	// returns a BitMap copy
-	TArray<int32> GetBitMap()
+	TArray<int32> GetBitMap() const
 	{
 		return BitMap;
 	}

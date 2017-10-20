@@ -54,6 +54,9 @@ public:
 	void Copy(ATetromino * OtherTetromino);
 	//FIntVector4 GetBoundIndex();
 
+	int32 GetSize() const;
+	TArray<int32> GetBitmap() const;
+
 	void MoveLeft();
 	void MoveRight();
 	void RotateCW();

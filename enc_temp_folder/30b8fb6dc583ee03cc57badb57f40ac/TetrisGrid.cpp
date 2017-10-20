@@ -109,7 +109,7 @@ void ATetrisGrid::UpdateTetrominoPosition()
 {
 	FVector NewLocation = CurrentTetromino->GetActorLocation();
 	NewLocation.Y = CurrentTetromino->BlockSize * Point.X;
-	NewLocation.Z = CurrentTetromino->BlockSize * (Point.Y + 1);
+	NewLocation.Z = CurrentTetromino->BlockSize * Point.Y;
 	CurrentTetromino->SetActorLocation(NewLocation);
 }
 
@@ -148,6 +148,12 @@ void ATetrisGrid::StartMergeTimer()
 
 bool ATetrisGrid::DidHitABlock()
 {
+	//bool HasHit = false;
+	//if (Point.Y <= 0.0f)
+	//{
+	//	return true;
+	//}
+
 	TArray<int32> TetrominoBitmap = CurrentTetromino->GetBitmap();
 	int32 TetrominoSize = CurrentTetromino->GetSize();
 	int32 ComputedTetrominoIndex;

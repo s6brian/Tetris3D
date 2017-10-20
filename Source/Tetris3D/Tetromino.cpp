@@ -67,6 +67,16 @@ void ATetromino::SetBitmap(TArray<int32> NewBitmap)
 	CurrentShape.SetBitmap(NewBitmap);
 }
 
+int32 ATetromino::GetSize() const
+{
+	return CurrentShape.GetSize();
+}
+
+TArray<int32> ATetromino::GetBitmap() const
+{
+	return CurrentShape.GetBitMap();
+}
+
 void ATetromino::Copy(ATetromino * OtherTetromino)
 {
 	CurrentShape.SetBitmap(OtherTetromino->CurrentShape.GetBitMap());
