@@ -88,16 +88,7 @@ void ATetrisGrid::Tick(float DeltaTime)
 
 	default:
 	{
-		//if (LapsedTime >= SPEED_FACTOR / Speed)
-		//{
-		//	LapsedTime = 0.0f;
-			TryTetrominoDropOnce(DeltaTime);
-		//}
-		//else
-		//{
-		//	LapsedTime += DeltaTime;
-		//}
-
+		TryTetrominoDropOnce(DeltaTime);
 		break;
 	}}
 }
@@ -231,6 +222,31 @@ void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 
 void ATetrisGrid::GridCleanup()
 {
+	int32 RowIndecesCount    = RowIndeces.Num();
+	int32 NextCachedRowIndex = 0;
+	int32 ComputedIndexA     = 0;
+	int32 ComputedIndexB     = 0;
+
+	for (int32 CachedRowIndex = RowIndecesCount - 1; CachedRowIndex >= 0; --CachedRowIndex)
+	{
+		NextCachedRowIndex = (CachedRowIndex < RowIndecesCount - 1) ? RowIndeces[CachedRowIndex + 1]: Dimension.Y - 1;
+
+		for (int32 GridRowIndex = RowIndeces[CachedRowIndex]; GridRowIndex < NextCachedRowIndex; ++GridRowIndex)
+		{
+			for (int32 GridColumnIndex = 0; GridColumnIndex < Dimension.X; ++GridColumnIndex)
+			{
+				ComputedIndexA = (GridRowIndex       * Dimension.X) + GridColumnIndex;
+				ComputedIndexB = ((GridRowIndex + 1) * Dimension.X) + GridColumnIndex;
+
+				BitMap[ComputedIndexA] = BitMap[ComputedIndexB];
+				BitMap[ComputedIndexB] = 0;
+
+				Blocks[ComputedIndexA]->SetVisibility(BitMap[ComputedIndexA] == 1);
+				Blocks[ComputedIndexB]->SetVisibility(false);
+			}
+		}
+	}
+
 	CurrentTetromino->Copy(NextTetromino);
 	NextTetromino->GenerateRandomTetromino();
 
