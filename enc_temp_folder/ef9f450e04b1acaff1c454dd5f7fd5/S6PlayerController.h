@@ -31,10 +31,9 @@ protected:
 	void OnPressD();
 	void OnPressE();
 	void OnPressQ();
-	void OnPressSpacebar();
 
 public:
-	//void SetTetromino(class ATetromino * PTetromino);
+	void SetTetromino(class ATetromino * PTetromino);
 	void SetTetrisGrid(class ATetrisGrid * PTetrisGrid);
 
 	

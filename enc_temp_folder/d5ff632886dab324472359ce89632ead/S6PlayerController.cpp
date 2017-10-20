@@ -25,13 +25,12 @@ void AS6PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("MouseLeft"  , IE_Pressed , this, &AS6PlayerController::OnMouseLeftDown);
-	InputComponent->BindAction("MouseLeft"  , IE_Released, this, &AS6PlayerController::OnMouseLeftUp  );
-	InputComponent->BindAction("MoveLeft"   , IE_Pressed , this, &AS6PlayerController::OnPressA       );
-	InputComponent->BindAction("MoveRight"  , IE_Pressed , this, &AS6PlayerController::OnPressD       );
-	InputComponent->BindAction("RotateCW"   , IE_Pressed , this, &AS6PlayerController::OnPressE       );
-	InputComponent->BindAction("RotateCCW"  , IE_Pressed , this, &AS6PlayerController::OnPressQ       );
-	InputComponent->BindAction("DropInstant", IE_Pressed , this, &AS6PlayerController::OnPressSpacebar);
+	InputComponent->BindAction("MouseLeft", IE_Pressed , this, &AS6PlayerController::OnMouseLeftDown);
+	InputComponent->BindAction("MouseLeft", IE_Released, this, &AS6PlayerController::OnMouseLeftUp);
+	InputComponent->BindAction("MoveLeft" , IE_Pressed , this, &AS6PlayerController::OnPressA);
+	InputComponent->BindAction("MoveRight", IE_Pressed , this, &AS6PlayerController::OnPressD);
+	InputComponent->BindAction("RotateCW" , IE_Pressed , this, &AS6PlayerController::OnPressE);
+	InputComponent->BindAction("RotateCCW", IE_Pressed , this, &AS6PlayerController::OnPressQ);
 
 	InputComponent->BindAxis("MouseX", this, &AS6PlayerController::OnMouseX);
 
@@ -149,14 +148,6 @@ void AS6PlayerController::OnPressQ()
 	if (TetrisGrid)
 	{
 		TetrisGrid->TryTetrominoRotateCCW();
-	}
-}
-
-void AS6PlayerController::OnPressSpacebar()
-{
-	if (TetrisGrid)
-	{
-		TetrisGrid->InstantDrop();
 	}
 }
 

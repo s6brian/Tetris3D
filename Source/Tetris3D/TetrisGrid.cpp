@@ -16,6 +16,7 @@ ATetrisGrid::ATetrisGrid()
 
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	CurrentGridState = Default;
 }
 
 void ATetrisGrid::PostInitializeComponents()
@@ -66,16 +67,38 @@ void ATetrisGrid::Tick(float DeltaTime)
 		return;
 	}
 
-	if (LapsedTime >= SPEED_FACTOR / Speed)
+	switch (CurrentGridState) {
+	case EGridState::CopyTetromino:
 	{
-		LapsedTime = 0.0f;
-		TryTetrominoDropOnce();
+		break;
 	}
-	else
+	
+	case EGridState::ClearRowAnimation:
 	{
-		LapsedTime += DeltaTime;
+		ClearRowAnimation();
+		break;
 	}
 
+	case EGridState::ClearRowCleanup:
+	{
+		GridCleanup();
+		break;
+	}
+
+	default:
+	{
+		if (LapsedTime >= SPEED_FACTOR / Speed)
+		{
+			LapsedTime = 0.0f;
+			TryTetrominoDropOnce();
+		}
+		else
+		{
+			LapsedTime += DeltaTime;
+		}
+
+		break;
+	}}
 }
 
 void ATetrisGrid::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PNextTetromino)
@@ -133,11 +156,26 @@ void ATetrisGrid::StartMergeTimer()
 		Blocks[GridIndeces[Index]]->SetVisibility(true);
 	}
 
+	LapsedTime = 0.0f;
+	CurrentGridState = EGridState::ClearRowAnimation;
+}
+
+void ATetrisGrid::ClearRowAnimation()
+{
+
+
+	CurrentGridState = EGridState::ClearRowCleanup;
+}
+
+void ATetrisGrid::GridCleanup()
+{
 	CurrentTetromino->Copy(NextTetromino);
 	NextTetromino->GenerateRandomTetromino();
 
 	Point = FVector2D(4.0f, Dimension.Y);
 	UpdateTetrominoPosition();
+
+	CurrentGridState = EGridState::Default;
 }
 
 bool ATetrisGrid::DidHitABlock()
@@ -149,8 +187,7 @@ bool ATetrisGrid::DidHitABlock()
 
 	for (int Index = 0; Index < TBitmapLength; ++Index)
 	{
-		if (   GridIndeces[Index]     >= GBitmapLength
-			|| TetrominoBitmap[Index] == 0             )
+		if (GridIndeces[Index] >= GBitmapLength || TetrominoBitmap[Index] == 0)
 		{
 			continue;
 		}
@@ -177,11 +214,17 @@ void ATetrisGrid::TryTetrominoDropOnce()
 	{
 		UpdateTetrominoPosition();
 	}
-	//else
-	//{
-	//	Point.Y = 0;
-	//	StartMergeTimer();
-	//}
+}
+
+void ATetrisGrid::InstantDrop()
+{
+	while (!DidHitABlock())
+	{
+		Point.Y -= 1.0f;
+	}
+
+	Point.Y += 1.0f;
+	StartMergeTimer();
 }
 
 void ATetrisGrid::TryTetrominoMoveLeft()

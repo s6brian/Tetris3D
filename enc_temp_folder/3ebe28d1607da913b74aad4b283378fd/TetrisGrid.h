@@ -6,15 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "TetrisGrid.generated.h"
 
-UENUM()
-enum EGridState
-{
-	Default,
-	CopyTetromino,
-	ClearRowAnimation,
-	ClearRowCleanup
-};
-
 UCLASS()
 class TETRIS3D_API ATetrisGrid : public AActor
 {
@@ -37,7 +28,6 @@ protected:
 	TArray<class UStaticMeshComponent *> Blocks;
 
 	FVector2D Point;
-	EGridState CurrentGridState;
 
 public:
 	UPROPERTY(EditDefaultsOnly)
@@ -67,9 +57,6 @@ protected:
 	void UpdateTetrominoPosition();
 	void TryTetrominoDropOnce();
 	void StartMergeTimer();
-	void ClearRowAnimation();
-	void GridCleanup();
-
 	bool DidHitABlock();
 
 public:	
@@ -78,7 +65,6 @@ public:
 	void SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PNextTetromino);
 
 	// Controls
-	void InstantDrop();
 	void TryTetrominoMoveLeft();
 	void TryTetrominoMoveRight();
 	void TryTetrominoRotateCW();
