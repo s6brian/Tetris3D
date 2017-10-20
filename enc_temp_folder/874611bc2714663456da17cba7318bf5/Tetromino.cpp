@@ -74,42 +74,12 @@ int32 ATetromino::GetSize() const
 
 TArray<int32> ATetromino::GetBitmap() const
 {
-	return CurrentShape.GetBitmap();
-}
-
-TArray<int32> ATetromino::GetGridIndeces(FVector2D GridDimension, FVector2D GridPoint) const
-{
-	TArray<int32> Indeces;
-
-	TArray<int32> TetrominoBitmap = CurrentShape.GetBitmap();
-	int32 TetrominoSize = CurrentShape.GetSize();
-	//int32 ComputedTetrominoIndex;
-	int32 ComputedGridIndex;
-
-	for (int32 Row = 0; Row < TetrominoSize; ++Row)
-	{
-		for (int32 Col = 0; Col < TetrominoSize; ++Col)
-		{
-			//ComputedTetrominoIndex = ( Row * TetrominoSize ) + Col;
-			ComputedGridIndex = (( Row + GridPoint.Y ) * GridDimension.X ) + Col + GridPoint.X;
-
-			//if (   ComputedGridIndex < 0
-			//	|| ComputedGridIndex >= (GridDimension.X * GridDimension.Y)
-			//	|| TetrominoBitmap[ComputedTetrominoIndex] == 0)
-			//{
-			//	continue;
-			//}
-
-			Indeces.Add(ComputedGridIndex);
-		}
-	}
-
-	return Indeces;
+	return CurrentShape.GetBitMap();
 }
 
 void ATetromino::Copy(ATetromino * OtherTetromino)
 {
-	CurrentShape.SetBitmap(OtherTetromino->CurrentShape.GetBitmap());
+	CurrentShape.SetBitmap(OtherTetromino->CurrentShape.GetBitMap());
 	RefreshDisplay();
 }
 
@@ -120,7 +90,7 @@ void ATetromino::ResetPosition()
 
 void ATetromino::RefreshDisplay()
 {
-	TArray<int32> TetrominoMap = CurrentShape.GetBitmap();
+	TArray<int32> TetrominoMap = CurrentShape.GetBitMap();
 	int32 TetrominoSize        = CurrentShape.GetSize();
 	int32 TetrominoBlockCount  = TetrominoSize * TetrominoSize;
 	int32 ComputedIndex;

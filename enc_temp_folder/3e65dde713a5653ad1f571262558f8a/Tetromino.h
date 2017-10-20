@@ -56,7 +56,6 @@ public:
 
 	int32 GetSize() const;
 	TArray<int32> GetBitmap() const;
-	TArray<int32> GetGridIndeces(FVector2D GridDimension, FVector2D GridPoint) const;
 
 	void MoveLeft();
 	void MoveRight();

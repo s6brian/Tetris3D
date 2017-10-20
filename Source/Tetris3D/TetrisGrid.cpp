@@ -115,28 +115,22 @@ void ATetrisGrid::UpdateTetrominoPosition()
 
 void ATetrisGrid::StartMergeTimer()
 {
+	TArray<int32> GridIndeces     = CurrentTetromino->GetGridIndeces(Dimension, Point);
 	TArray<int32> TetrominoBitmap = CurrentTetromino->GetBitmap();
-	int32 TetrominoSize = CurrentTetromino->GetSize();
-	int32 ComputedTetrominoIndex;
-	int32 ComputedGridIndex;
+	int32 TBitmapLength           = TetrominoBitmap.Num();
+	int32 GBitmapLength           = BitMap.Num();
 
-	for (int32 Row = 0; Row < TetrominoSize; ++Row)
+	for (int Index = 0; Index < TBitmapLength; ++Index)
 	{
-		for (int32 Col = 0; Col < TetrominoSize; ++Col)
+		if (   GridIndeces[Index]     <  0
+			|| GridIndeces[Index]     >= GBitmapLength
+			|| TetrominoBitmap[Index] == 0             )
 		{
-			ComputedTetrominoIndex = ( Row * TetrominoSize ) + Col;
-			ComputedGridIndex = (( Row + Point.Y ) * Dimension.X ) + Col + Point.X;
-
-			if (   ComputedGridIndex < 0
-				|| ComputedGridIndex >= (Dimension.X * Dimension.Y)
-				|| TetrominoBitmap[ComputedTetrominoIndex] == 0)
-			{
-				continue;
-			}
-
-			BitMap[ComputedGridIndex] = TetrominoBitmap[ComputedTetrominoIndex];
-			Blocks[ComputedGridIndex]->SetVisibility(true);
+			continue;
 		}
+
+		BitMap[GridIndeces[Index]] = TetrominoBitmap[Index];
+		Blocks[GridIndeces[Index]]->SetVisibility(true);
 	}
 
 	CurrentTetromino->Copy(NextTetromino);
@@ -148,32 +142,25 @@ void ATetrisGrid::StartMergeTimer()
 
 bool ATetrisGrid::DidHitABlock()
 {
+	TArray<int32> GridIndeces     = CurrentTetromino->GetGridIndeces(Dimension, Point);
 	TArray<int32> TetrominoBitmap = CurrentTetromino->GetBitmap();
-	int32 TetrominoSize = CurrentTetromino->GetSize();
-	int32 ComputedTetrominoIndex;
-	int32 ComputedGridIndex;
+	int32 TBitmapLength           = TetrominoBitmap.Num();
+	int32 GBitmapLength           = BitMap.Num();
 
-	for (int32 Row = 0; Row < TetrominoSize; ++Row)
+	for (int Index = 0; Index < TBitmapLength; ++Index)
 	{
-		for (int32 Col = 0; Col < TetrominoSize; ++Col)
+		if (   GridIndeces[Index]     >= GBitmapLength
+			|| TetrominoBitmap[Index] == 0             )
 		{
-			ComputedTetrominoIndex = ( Row * TetrominoSize ) + Col;
-			ComputedGridIndex = (( Row + Point.Y ) * Dimension.X ) + Col + Point.X;
+			continue;
+		}
 
-			if (   ComputedGridIndex < 0
-				|| ComputedGridIndex >= (Dimension.X * Dimension.Y)
-				|| TetrominoBitmap[ComputedTetrominoIndex] == 0)
-			{
-				continue;
-			}
-
-			if ( BitMap[ComputedGridIndex] == 1 )
-			{
-				return true;
-			}
+		if (GridIndeces[Index] < 0 || BitMap[GridIndeces[Index]] == 1)
+		{
+			return true;
 		}
 	}
-
+	
 	return false;
 }
 
@@ -190,11 +177,11 @@ void ATetrisGrid::TryTetrominoDropOnce()
 	{
 		UpdateTetrominoPosition();
 	}
-	else
-	{
-		Point.Y = 0;
-		StartMergeTimer();
-	}
+	//else
+	//{
+	//	Point.Y = 0;
+	//	StartMergeTimer();
+	//}
 }
 
 void ATetrisGrid::TryTetrominoMoveLeft()

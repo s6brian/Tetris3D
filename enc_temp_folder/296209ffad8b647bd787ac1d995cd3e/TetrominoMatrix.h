@@ -76,7 +76,7 @@ public:
 	}
 
 	// returns a BitMap copy
-	TArray<int32> GetBitmap() const
+	TArray<int32> GetBitMap() const
 	{
 		return BitMap;
 	}
