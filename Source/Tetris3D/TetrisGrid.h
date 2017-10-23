@@ -33,6 +33,7 @@ protected:
 
 	float LapsedTime;
 	float MoveLapseTime;
+	float MoveLapseDelay;
 	float SoftDropMultiplier;
 	bool  IsMoveLeftActive;
 	bool  IsMoveRightActive;

@@ -97,6 +97,7 @@ void ATetrisGrid::Tick(float DeltaTime)
 	default:
 	{
 		TetrominoTickDrop(DeltaTime);
+		TetrominoMove(DeltaTime);
 		break;
 	}}
 }
@@ -309,6 +310,42 @@ void ATetrisGrid::TetrominoTickDrop(float DeltaTime)
 	}
 }
 
+void ATetrisGrid::TetrominoMove(float Deltatime)
+{
+	if (MoveLapseTime <= MOVE_SPEED + MoveLapseDelay)
+	{
+		MoveLapseTime += Deltatime;
+		return;
+	}
+
+	MoveLapseDelay = 0.0f;
+	MoveLapseTime = 0.0f;
+	float Offset = 0.0f;
+
+	if (IsMoveRightActive)
+	{
+		Offset = 1.0f;
+	}
+	else if (IsMoveLeftActive)
+	{
+		Offset = -1.0f;
+	}
+
+	if (Offset != 0.0f)
+	{
+		Point.X += Offset;
+
+		if (DidHitABlock())
+		{
+			Point.X -= Offset;
+		}
+		else
+		{
+			UpdateTetrominoPosition();
+		}
+	}
+}
+
 void ATetrisGrid::SoftDropStart()
 {
 	SoftDropMultiplier = 8.0f;
@@ -327,7 +364,10 @@ void ATetrisGrid::HardDrop()
 
 void ATetrisGrid::TetrominoMoveLeftStart()
 {
+	TetrominoMoveRightEnd();
 	IsMoveLeftActive = true;
+	MoveLapseDelay = MOVE_SPEED * 10.0f;
+	MoveLapseTime = 0.0f;
 	Point.X -= 1.0f;
 
 	if (DidHitABlock())
@@ -342,7 +382,10 @@ void ATetrisGrid::TetrominoMoveLeftStart()
 
 void ATetrisGrid::TetrominoMoveRightStart()
 {
+	TetrominoMoveLeftEnd();
 	IsMoveRightActive = true;
+	MoveLapseDelay = MOVE_SPEED * 10.0f;
+	MoveLapseTime = 0.0f;
 	Point.X += 1.0f;
 
 	if (DidHitABlock())
@@ -383,4 +426,6 @@ void ATetrisGrid::TetrominoMoveRightEnd()
 {
 	IsMoveRightActive = false;
 }
+
+
 
