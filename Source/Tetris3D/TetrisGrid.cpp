@@ -232,26 +232,38 @@ void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 void ATetrisGrid::GridCleanup()
 {
 	int32 RowIndecesCount    = RowIndeces.Num();
-	int32 NextCachedRowIndex = 0;
+	int32 RowValue           = 0;
 	int32 ComputedIndexA     = 0;
 	int32 ComputedIndexB     = 0;
 
+	// fill each cleared out row
 	for (int32 CachedRowIndex = RowIndecesCount - 1; CachedRowIndex >= 0; --CachedRowIndex)
 	{
-		NextCachedRowIndex = (CachedRowIndex < RowIndecesCount - 1) ? RowIndeces[CachedRowIndex + 1]: Dimension.Y - 1;
-
-		for (int32 GridRowIndex = RowIndeces[CachedRowIndex]; GridRowIndex < NextCachedRowIndex; ++GridRowIndex)
+		// drop all rows above the cleared row
+		for (int32 GridRowIndex = RowIndeces[CachedRowIndex]; GridRowIndex < Dimension.Y - 1; ++GridRowIndex)
 		{
+			RowValue = 0;
+
+			// drop each block in current row
 			for (int32 GridColumnIndex = 0; GridColumnIndex < Dimension.X; ++GridColumnIndex)
 			{
 				ComputedIndexA = (GridRowIndex       * Dimension.X) + GridColumnIndex;
 				ComputedIndexB = ((GridRowIndex + 1) * Dimension.X) + GridColumnIndex;
+
+				RowValue += BitMap[ComputedIndexB];
 
 				BitMap[ComputedIndexA] = BitMap[ComputedIndexB];
 				BitMap[ComputedIndexB] = 0;
 
 				Blocks[ComputedIndexA]->SetVisibility(BitMap[ComputedIndexA] == 1);
 				Blocks[ComputedIndexB]->SetVisibility(false);
+			}
+
+			// all rows with visible blocks dropped
+			// proceed filling next cleared row
+			if (RowValue <= 0)
+			{
+				break;
 			}
 		}
 	}

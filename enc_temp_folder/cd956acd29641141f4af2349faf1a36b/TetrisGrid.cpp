@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #define SPEED_FACTOR 2.0f
 #define CLEAR_ROW_FPS (1.0f / 60.0f)
+#define MOVE_SPEED (1.0f / 30.0f)
 
 #include "TetrisGrid.h"
 #include "Tetromino.h"
@@ -16,8 +17,15 @@ ATetrisGrid::ATetrisGrid()
 
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	CurrentGridState = Default;
-	IsClearing = false;
+
+	IsClearing                    = false;
+	IsMoveLeftActive              = false;
+	IsMoveRightActive             = false;
+
+	CurrentGridState              = Default;
+	LapsedTime                    = 0.0f;
+	MoveLapseTime                 = 0.0f;
+	SoftDropMultiplier            = 1.0f;
 }
 
 void ATetrisGrid::PostInitializeComponents()
@@ -88,7 +96,8 @@ void ATetrisGrid::Tick(float DeltaTime)
 
 	default:
 	{
-		TryTetrominoDropOnce(DeltaTime);
+		TetrominoTickDrop(DeltaTime);
+		TetrominoMove(DeltaTime);
 		break;
 	}}
 }
@@ -223,26 +232,41 @@ void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 void ATetrisGrid::GridCleanup()
 {
 	int32 RowIndecesCount    = RowIndeces.Num();
-	int32 NextCachedRowIndex = 0;
+	//int32 NextCachedRowIndex = 0;
+	int32 RowValue           = 0;
 	int32 ComputedIndexA     = 0;
 	int32 ComputedIndexB     = 0;
 
+	// fill each cleared out row
 	for (int32 CachedRowIndex = RowIndecesCount - 1; CachedRowIndex >= 0; --CachedRowIndex)
 	{
-		NextCachedRowIndex = (CachedRowIndex < RowIndecesCount - 1) ? RowIndeces[CachedRowIndex + 1]: Dimension.Y - 1;
+		//NextCachedRowIndex = (CachedRowIndex < RowIndecesCount - 1) ? RowIndeces[CachedRowIndex + 1]: Dimension.Y - 1;
+		//for (int32 GridRowIndex = RowIndeces[CachedRowIndex]; GridRowIndex < NextCachedRowIndex; ++GridRowIndex)
+		RowValue = 0;
 
-		for (int32 GridRowIndex = RowIndeces[CachedRowIndex]; GridRowIndex < NextCachedRowIndex; ++GridRowIndex)
+		// drop all rows above the cleared row
+		for (int32 GridRowIndex = RowIndeces[CachedRowIndex]; GridRowIndex < Dimension.Y - 1; ++GridRowIndex)
 		{
+			// drop each block in current row
 			for (int32 GridColumnIndex = 0; GridColumnIndex < Dimension.X; ++GridColumnIndex)
 			{
 				ComputedIndexA = (GridRowIndex       * Dimension.X) + GridColumnIndex;
 				ComputedIndexB = ((GridRowIndex + 1) * Dimension.X) + GridColumnIndex;
+
+				RowValue += BitMap[ComputedIndexB];
 
 				BitMap[ComputedIndexA] = BitMap[ComputedIndexB];
 				BitMap[ComputedIndexB] = 0;
 
 				Blocks[ComputedIndexA]->SetVisibility(BitMap[ComputedIndexA] == 1);
 				Blocks[ComputedIndexB]->SetVisibility(false);
+			}
+
+			// all rows with visible blocks dropped
+			// proceed filling next cleared row
+			if (RowValue <= 0)
+			{
+				break;
 			}
 		}
 	}
@@ -279,9 +303,9 @@ bool ATetrisGrid::DidHitABlock()
 	return false;
 }
 
-void ATetrisGrid::TryTetrominoDropOnce(float DeltaTime)
+void ATetrisGrid::TetrominoTickDrop(float DeltaTime)
 {
-	if (LapsedTime <= SPEED_FACTOR / Speed)
+	if (LapsedTime <= SPEED_FACTOR / (Speed * SoftDropMultiplier))
 	{
 		LapsedTime += DeltaTime;
 		return;
@@ -301,7 +325,48 @@ void ATetrisGrid::TryTetrominoDropOnce(float DeltaTime)
 	}
 }
 
-void ATetrisGrid::InstantDrop()
+void ATetrisGrid::TetrominoMove(float Deltatime)
+{
+	if (MoveLapseTime <= MOVE_SPEED + MoveLapseDelay)
+	{
+		MoveLapseTime += Deltatime;
+		return;
+	}
+
+	MoveLapseDelay = 0.0f;
+	MoveLapseTime = 0.0f;
+	float Offset = 0.0f;
+
+	if (IsMoveRightActive)
+	{
+		Offset = 1.0f;
+	}
+	else if (IsMoveLeftActive)
+	{
+		Offset = -1.0f;
+	}
+
+	if (Offset != 0.0f)
+	{
+		Point.X += Offset;
+
+		if (DidHitABlock())
+		{
+			Point.X -= Offset;
+		}
+		else
+		{
+			UpdateTetrominoPosition();
+		}
+	}
+}
+
+void ATetrisGrid::SoftDropStart()
+{
+	SoftDropMultiplier = 8.0f;
+}
+
+void ATetrisGrid::HardDrop()
 {
 	while (!DidHitABlock())
 	{
@@ -312,8 +377,12 @@ void ATetrisGrid::InstantDrop()
 	StartMergeTimer();
 }
 
-void ATetrisGrid::TryTetrominoMoveLeft()
+void ATetrisGrid::TetrominoMoveLeftStart()
 {
+	TetrominoMoveRightEnd();
+	IsMoveLeftActive = true;
+	MoveLapseDelay = MOVE_SPEED * 10.0f;
+	MoveLapseTime = 0.0f;
 	Point.X -= 1.0f;
 
 	if (DidHitABlock())
@@ -326,8 +395,12 @@ void ATetrisGrid::TryTetrominoMoveLeft()
 	}
 }
 
-void ATetrisGrid::TryTetrominoMoveRight()
+void ATetrisGrid::TetrominoMoveRightStart()
 {
+	TetrominoMoveLeftEnd();
+	IsMoveRightActive = true;
+	MoveLapseDelay = MOVE_SPEED * 10.0f;
+	MoveLapseTime = 0.0f;
 	Point.X += 1.0f;
 
 	if (DidHitABlock())
@@ -340,18 +413,34 @@ void ATetrisGrid::TryTetrominoMoveRight()
 	}
 }
 
-void ATetrisGrid::TryTetrominoRotateCW()
+void ATetrisGrid::TetrominoRotateCW()
 {
 	CurrentTetromino->RotateCW();
 
 	// TODO: check if kick is necessary
 }
 
-void ATetrisGrid::TryTetrominoRotateCCW()
+void ATetrisGrid::TetrominoRotateCCW()
 {
 	CurrentTetromino->RotateCCW();
 
 	// TODO: check if kick is necessary
 }
+
+void ATetrisGrid::SoftDropEnd()
+{
+	SoftDropMultiplier = 1.0f;
+}
+
+void ATetrisGrid::TetrominoMoveLeftEnd()
+{
+	IsMoveLeftActive = false;
+}
+
+void ATetrisGrid::TetrominoMoveRightEnd()
+{
+	IsMoveRightActive = false;
+}
+
 
 
