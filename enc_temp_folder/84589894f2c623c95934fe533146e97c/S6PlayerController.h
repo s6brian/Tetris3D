@@ -27,17 +27,11 @@ protected:
 	void OnMouseX(float AxisValue);
 	void OnMouseLeftDown();
 	void OnMouseLeftUp();
-
 	void OnPressA();
 	void OnPressD();
 	void OnPressE();
 	void OnPressQ();
-	void OnPressS();
 	void OnPressSpacebar();
-
-	void OnReleaseA();
-	void OnReleaseD();
-	void OnReleaseS();
 
 public:
 	//void SetTetromino(class ATetromino * PTetromino);

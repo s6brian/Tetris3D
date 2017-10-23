@@ -32,10 +32,6 @@ protected:
 	class ATetromino * NextTetromino;
 
 	float LapsedTime;
-	float MoveLapseTime;
-	float SoftDropMultiplier;
-	bool  IsMoveLeftActive;
-	bool  IsMoveRightActive;
 
 	bool IsClearing;
 	int32 ColumnIndex;
@@ -72,8 +68,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
 
-	void TetrominoTickDrop(float DeltaTime);
-	void TetrominoMove(float Deltatime);
+	void TryTetrominoTickDrop(float DeltaTime);
 	void ClearRowAnimation(float DeltaTime);
 	void GridCleanup();
 	void StartMergeTimer();
@@ -87,17 +82,10 @@ public:
 	void SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PNextTetromino);
 
 	// Controls
-	void HardDrop();
-	void SoftDropStart();
-	void TetrominoRotateCW();
-	void TetrominoRotateCCW();
-	void TetrominoMoveLeftStart();
-	void TetrominoMoveRightStart();
-
-	void SoftDropEnd();
-	void TetrominoMoveLeftEnd();
-	void TetrominoMoveRightEnd();
-
-	
+	void InstantDrop();
+	void TryTetrominoMoveLeft();
+	void TryTetrominoMoveRight();
+	void TryTetrominoRotateCW();
+	void TryTetrominoRotateCCW();
 
 };

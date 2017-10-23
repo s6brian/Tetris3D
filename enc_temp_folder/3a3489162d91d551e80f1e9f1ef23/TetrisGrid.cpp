@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #define SPEED_FACTOR 2.0f
 #define CLEAR_ROW_FPS (1.0f / 60.0f)
-#define MOVE_SPEED (1.0f / 30.0f)
 
 #include "TetrisGrid.h"
 #include "Tetromino.h"
@@ -17,15 +16,8 @@ ATetrisGrid::ATetrisGrid()
 
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	IsClearing                    = false;
-	IsMoveLeftActive              = false;
-	IsMoveRightActive             = false;
-
-	CurrentGridState              = Default;
-	LapsedTime                    = 0.0f;
-	MoveLapseTime                 = 0.0f;
-	SoftDropMultiplier            = 1.0f;
+	CurrentGridState = Default;
+	IsClearing = false;
 }
 
 void ATetrisGrid::PostInitializeComponents()
@@ -96,7 +88,7 @@ void ATetrisGrid::Tick(float DeltaTime)
 
 	default:
 	{
-		TetrominoTickDrop(DeltaTime);
+		TryTetrominoDropOnce(DeltaTime);
 		break;
 	}}
 }
@@ -287,9 +279,9 @@ bool ATetrisGrid::DidHitABlock()
 	return false;
 }
 
-void ATetrisGrid::TetrominoTickDrop(float DeltaTime)
+void ATetrisGrid::TryTetrominoDropOnce(float DeltaTime)
 {
-	if (LapsedTime <= SPEED_FACTOR / (Speed * SoftDropMultiplier))
+	if (LapsedTime <= SPEED_FACTOR / Speed)
 	{
 		LapsedTime += DeltaTime;
 		return;
@@ -309,12 +301,7 @@ void ATetrisGrid::TetrominoTickDrop(float DeltaTime)
 	}
 }
 
-void ATetrisGrid::SoftDropStart()
-{
-	SoftDropMultiplier = 8.0f;
-}
-
-void ATetrisGrid::HardDrop()
+void ATetrisGrid::InstantDrop()
 {
 	while (!DidHitABlock())
 	{
@@ -325,9 +312,8 @@ void ATetrisGrid::HardDrop()
 	StartMergeTimer();
 }
 
-void ATetrisGrid::TetrominoMoveLeftStart()
+void ATetrisGrid::TryTetrominoMoveLeft()
 {
-	IsMoveLeftActive = true;
 	Point.X -= 1.0f;
 
 	if (DidHitABlock())
@@ -340,9 +326,8 @@ void ATetrisGrid::TetrominoMoveLeftStart()
 	}
 }
 
-void ATetrisGrid::TetrominoMoveRightStart()
+void ATetrisGrid::TryTetrominoMoveRight()
 {
-	IsMoveRightActive = true;
 	Point.X += 1.0f;
 
 	if (DidHitABlock())
@@ -355,32 +340,18 @@ void ATetrisGrid::TetrominoMoveRightStart()
 	}
 }
 
-void ATetrisGrid::TetrominoRotateCW()
+void ATetrisGrid::TryTetrominoRotateCW()
 {
 	CurrentTetromino->RotateCW();
 
 	// TODO: check if kick is necessary
 }
 
-void ATetrisGrid::TetrominoRotateCCW()
+void ATetrisGrid::TryTetrominoRotateCCW()
 {
 	CurrentTetromino->RotateCCW();
 
 	// TODO: check if kick is necessary
 }
 
-void ATetrisGrid::SoftDropEnd()
-{
-	SoftDropMultiplier = 1.0f;
-}
-
-void ATetrisGrid::TetrominoMoveLeftEnd()
-{
-	IsMoveLeftActive = false;
-}
-
-void ATetrisGrid::TetrominoMoveRightEnd()
-{
-	IsMoveRightActive = false;
-}
 
