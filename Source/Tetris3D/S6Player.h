@@ -24,9 +24,23 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+protected:
 	UPROPERTY(EditAnywhere)
-	USceneComponent* OurVisibleComponent;
+	class USpringArmComponent* OurCameraSpringArm;
+	class UCameraComponent* OurCamera;
+	//class ATetromino* NextTetromino;
 	
+	//Input variables
+	FVector2D CameraInput;
+	bool bMouseLeftPressed;
+
+public:
+	//void SetNextTetrominoPreview(class ATetromino * PNextTetromino);
+
+	//Input functions
+	void YawCamera(float AxisValue);
+	void OnMouseLeftDown();
+	void OnMouseLeftUp();
 };
