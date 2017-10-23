@@ -53,19 +53,16 @@ public:
 	FVector2D Dimension;
 
 	UPROPERTY(EditDefaultsOnly)
-	float Sides = 1.0f;
-
-	UPROPERTY(EditDefaultsOnly)
 	UStaticMesh * BlockStaticMesh;
 
 	UPROPERTY(EditDefaultsOnly)
-	float BlockSize = 100.0f;
+	float BlockSize;// = 100.0f;
 
 	UPROPERTY(EditDefaultsOnly)
-	float BlockScale = 0.9f;
+	float BlockScale;// = 0.9f;
 
 	UPROPERTY(EditDefaultsOnly)
-	float Speed = 1.0f;
+	float Speed;
 
 
 /**
