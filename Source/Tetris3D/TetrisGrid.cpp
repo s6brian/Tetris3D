@@ -173,6 +173,8 @@ void ATetrisGrid::StartMergeTimer()
 
 void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 {
+	int32 Perimeter = (Dimension.X - 1) * Sides;
+
 	if (IsClearing)
 	{
 		// hide 1 column at a time
@@ -186,7 +188,7 @@ void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 		
 		for (int32 Index = RowIndeces.Num()-1; Index >= 0; Index -= 2)
 		{
-			ComputedIndex = (RowIndeces[Index] * Dimension.X) + ColumnIndex;
+			ComputedIndex = (RowIndeces[Index] * Perimeter) + ColumnIndex;
 
 			BitMap[ComputedIndex] = 0;
 			Blocks[ComputedIndex]->SetVisibility(false);
@@ -196,7 +198,7 @@ void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 				continue;
 			}
 
-			ComputedIndex = (RowIndeces[Index - 1] * Dimension.X) + (Dimension.X - ColumnIndex - 1);
+			ComputedIndex = (RowIndeces[Index - 1] * Perimeter) + (Perimeter - ColumnIndex - 1);
 			BitMap[ComputedIndex] = 0;
 			Blocks[ComputedIndex]->SetVisibility(false);
 		}
@@ -215,12 +217,12 @@ void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 		{
 			RowValue = 0;
 
-			for (int32 Col = 0; Col < Dimension.X; ++Col)
+			for (int32 Col = 0; Col < Perimeter; ++Col)
 			{
-				RowValue += BitMap[(Row * Dimension.X) + Col];
+				RowValue += BitMap[(Row * Perimeter) + Col];
 			}
 
-			if (RowValue == Dimension.X)
+			if (RowValue == Perimeter)
 			{
 				RowIndeces.Add(Row);
 			}
@@ -229,7 +231,7 @@ void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 		IsClearing = RowIndeces.Num() > 0;
 	}
 
-	if (!IsClearing || ColumnIndex >= Dimension.X)
+	if (!IsClearing || ColumnIndex >= Perimeter)
 	{
 		LapsedTime       = 0.0f;
 		ColumnIndex      = 0;
@@ -240,6 +242,7 @@ void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 
 void ATetrisGrid::GridCleanup()
 {
+	int32 Perimeter          = (Dimension.X - 1) * Sides;
 	int32 RowIndecesCount    = RowIndeces.Num();
 	int32 RowValue           = 0;
 	int32 ComputedIndexA     = 0;
@@ -254,10 +257,10 @@ void ATetrisGrid::GridCleanup()
 			RowValue = 0;
 
 			// drop each block in current row
-			for (int32 GridColumnIndex = 0; GridColumnIndex < Dimension.X; ++GridColumnIndex)
+			for (int32 GridColumnIndex = 0; GridColumnIndex < Perimeter; ++GridColumnIndex)
 			{
-				ComputedIndexA = (GridRowIndex       * Dimension.X) + GridColumnIndex;
-				ComputedIndexB = ((GridRowIndex + 1) * Dimension.X) + GridColumnIndex;
+				ComputedIndexA = (GridRowIndex       * Perimeter) + GridColumnIndex;
+				ComputedIndexB = ((GridRowIndex + 1) * Perimeter) + GridColumnIndex;
 
 				RowValue += BitMap[ComputedIndexB];
 
