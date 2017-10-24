@@ -298,11 +298,11 @@ FVector ATetrisGrid::GetGridCoordinates(int32 PGridIndex)
 	SideIndex = (PGridIndex / (int32)(Dimension.X - 1)) % (int32)Sides;
 	FMath::SinCos(&Sine, &Cosine, FMath::DegreesToRadians(90.0f * SideIndex));
 
-	Position.X  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) + (BlockSize * (SideIndex / 2))) * FMath::Abs(Sine);   // forward | backward
+	Position.X  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) - (BlockSize * (Dimension.X - 1) * (SideIndex / 2))) * Sine;   // forward | backward
 	Position.X += ((Dimension.X - 1) * BlockSize * -Cosine * 0.5f) + ((Dimension.X - 1) * BlockSize * FMath::Abs(Cosine) * 0.5f);
 
 	//Position.Y = BlockSize * ( PGridIndex % (int32)((Dimension.X - 1) * Sides));
-	Position.Y  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) + (BlockSize * (SideIndex / 2))) * FMath::Abs(Cosine); // right | left
+	Position.Y  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) - (BlockSize * (Dimension.X - 1) * (SideIndex / 2))) * Cosine; // right | left
 	Position.Y += ((Dimension.X - 1) * BlockSize * Sine * 0.5f) + ((Dimension.X - 1) * BlockSize * FMath::Abs(Sine) * 0.5f);
 
 	Position.Z  = BlockSize * ((PGridIndex / (int32)((Dimension.X - 1) * Sides)) + 1);     // up | down
