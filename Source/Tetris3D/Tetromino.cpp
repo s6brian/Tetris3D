@@ -100,13 +100,14 @@ TArray<int32> ATetromino::GetGridIndeces(FVector2D GridDimension, int32 PSidesNu
 	TArray<int32> Indeces;
 	TArray<int32> TetrominoBitmap = CurrentShape.GetBitmap();
 	int32 TetrominoSize = CurrentShape.GetSize();
+	int32 Perimeter = (GridDimension.X - 1) * PSidesNum;
 	int32 ComputedGridIndex;
 
 	for (int32 Row = 0; Row < TetrominoSize; ++Row)
 	{
 		for (int32 Col = 0; Col < TetrominoSize; ++Col)
 		{
-			ComputedGridIndex = (( Row + GridPoint.Y ) * (GridDimension.X - 1) * PSidesNum) + Col + GridPoint.X;
+			ComputedGridIndex  = (( Row + GridPoint.Y ) * Perimeter) + ((Col + (int32)GridPoint.X) % Perimeter);
 			Indeces.Add(ComputedGridIndex);
 		}
 	}
