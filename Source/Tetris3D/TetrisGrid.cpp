@@ -120,7 +120,7 @@ void ATetrisGrid::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PN
 	LapsedTime = 0.0f;
 	Point = FVector2D(4.0f, Dimension.Y);
 
-	CurrentTetromino->SetActorLocation(FVector(0.0f, CurrentTetromino->BlockSize * Point.X, CurrentTetromino->BlockSize * Point.Y));
+	//CurrentTetromino->SetActorLocation(FVector(0.0f, CurrentTetromino->BlockSize * Point.X, CurrentTetromino->BlockSize * Point.Y));
 	NextTetromino->SetActorLocation(FVector(0.0f, -450.0f, 200.0f));
 
 	if (GEngine)
@@ -131,26 +131,24 @@ void ATetrisGrid::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PN
 
 void ATetrisGrid::UpdateTetrominoPosition()
 {
+	// update vertical position
 	FVector NewLocation = CurrentTetromino->GetActorLocation();
-	NewLocation.Y = CurrentTetromino->BlockSize * Point.X;
+	//NewLocation.Y = CurrentTetromino->BlockSize * Point.X;
 	NewLocation.Z = CurrentTetromino->BlockSize * (Point.Y + 1);
 	CurrentTetromino->SetActorLocation(NewLocation);
+
+	// update horizontal position
+	TArray<int32> GridIndeces = CurrentTetromino->GetGridIndeces(Dimension, Sides, Point);
+	for (int32 Index = GridIndeces.Num() - 1; Index >= 0; --Index)
+	{
+		NewLocation = GetGridCoordinates(GridIndeces[Index]);
+		CurrentTetromino->SetBlockRelativeLocationXY(Index, FVector2D(NewLocation.X, NewLocation.Y));
+	}
 }
 
 void ATetrisGrid::StartMergeTimer()
 {
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("================================"));
-	//}
-
-	TArray<int32> GridIndeces     = CurrentTetromino->GetGridIndeces(Dimension, Point);
-
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("================================"));
-	//}
-
+	TArray<int32> GridIndeces     = CurrentTetromino->GetGridIndeces(Dimension, Sides, Point);
 	TArray<int32> TetrominoBitmap = CurrentTetromino->GetBitmap();
 	int32 TBitmapLength           = TetrominoBitmap.Num();
 	int32 GBitmapLength           = BitMap.Num();
@@ -298,21 +296,23 @@ FVector ATetrisGrid::GetGridCoordinates(int32 PGridIndex)
 	SideIndex = (PGridIndex / (int32)(Dimension.X - 1)) % (int32)Sides;
 	FMath::SinCos(&Sine, &Cosine, FMath::DegreesToRadians(90.0f * SideIndex));
 
-	Position.X  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) - (BlockSize * (Dimension.X - 1) * (SideIndex / 2))) * Sine;   // forward | backward
+	// forward | backward
+	Position.X  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) - (BlockSize * (Dimension.X - 1) * (SideIndex / 2))) * Sine;
 	Position.X += ((Dimension.X - 1) * BlockSize * -Cosine * 0.5f) + ((Dimension.X - 1) * BlockSize * FMath::Abs(Cosine) * 0.5f);
 
-	//Position.Y = BlockSize * ( PGridIndex % (int32)((Dimension.X - 1) * Sides));
-	Position.Y  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) - (BlockSize * (Dimension.X - 1) * (SideIndex / 2))) * Cosine; // right | left
+	// right | left
+	Position.Y  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) - (BlockSize * (Dimension.X - 1) * (SideIndex / 2))) * Cosine; 
 	Position.Y += ((Dimension.X - 1) * BlockSize * Sine * 0.5f) + ((Dimension.X - 1) * BlockSize * FMath::Abs(Sine) * 0.5f);
 
-	Position.Z  = BlockSize * ((PGridIndex / (int32)((Dimension.X - 1) * Sides)) + 1);     // up | down
+	// up | down
+	Position.Z  = BlockSize * ((PGridIndex / (int32)((Dimension.X - 1) * Sides)) + 1);
 
 	return Position;
 }
 
 bool ATetrisGrid::DidHitABlock()
 {
-	TArray<int32> GridIndeces     = CurrentTetromino->GetGridIndeces(Dimension, Point);
+	TArray<int32> GridIndeces     = CurrentTetromino->GetGridIndeces(Dimension, Sides, Point);
 	TArray<int32> TetrominoBitmap = CurrentTetromino->GetBitmap();
 	int32 TBitmapLength           = TetrominoBitmap.Num();
 	int32 GBitmapLength           = BitMap.Num();
@@ -415,9 +415,15 @@ void ATetrisGrid::TetrominoMoveLeftStart()
 	MoveLapseTime = 0.0f;
 	Point.X -= 1.0f;
 
+	if (Point.X < 0)
+	{
+		Point.X = ((Dimension.X - 1) * Sides) - 1;
+	}
+
 	if (DidHitABlock())
 	{
 		Point.X += 1.0f;
+		Point.X  = (int32)Point.X % (int32)((Dimension.X - 1) * Sides);
 	}
 	else
 	{
@@ -432,10 +438,15 @@ void ATetrisGrid::TetrominoMoveRightStart()
 	MoveLapseDelay = MOVE_SPEED * 10.0f;
 	MoveLapseTime = 0.0f;
 	Point.X += 1.0f;
+	Point.X  = (int32)Point.X % (int32)((Dimension.X - 1) * Sides);
 
 	if (DidHitABlock())
 	{
 		Point.X -= 1.0f;
+		if (Point.X < 0)
+		{
+			Point.X = ((Dimension.X - 1) * Sides) - 1;
+		}
 	}
 	else
 	{
