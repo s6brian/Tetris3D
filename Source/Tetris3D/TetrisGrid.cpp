@@ -63,7 +63,14 @@ void ATetrisGrid::PostInitializeComponents()
 void ATetrisGrid::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CurrentTetromino->GenerateRandomTetromino();
+	NextTetromino->GenerateRandomTetromino();
 	
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("ATetrisGrid::BeginPlay"));
+	}
 }
 
 // Called every frame
@@ -120,6 +127,7 @@ void ATetrisGrid::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PN
 	LapsedTime = 0.0f;
 	Point = FVector2D(4.0f, Dimension.Y);
 
+	//UpdateTetrominoPosition();
 	//CurrentTetromino->SetActorLocation(FVector(0.0f, CurrentTetromino->BlockSize * Point.X, CurrentTetromino->BlockSize * Point.Y));
 	NextTetromino->SetActorLocation(FVector(0.0f, -450.0f, 200.0f));
 

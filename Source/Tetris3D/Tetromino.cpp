@@ -38,7 +38,12 @@ void ATetromino::PostInitializeComponents()
 void ATetromino::BeginPlay()
 {
 	Super::BeginPlay();
-	GenerateRandomTetromino();
+	//GenerateRandomTetromino();
+
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("ATetromino::BeginPlay"));
+	//}
 }
 
 void ATetromino::InitiateTetrominoShapes(TArray<FTetrominoMatrix> TetrominoShapes)
