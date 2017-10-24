@@ -45,18 +45,18 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void InitiateTetrominoShapes(TArray<FTetrominoMatrix> TetrominoShapes);
 
+	void ResetPosition();
 	void RefreshDisplay();
 
 public:	
-	int32 GetSize() const;
-	TArray<int32> GetBitmap() const;
-	TArray<int32> GetGridIndeces(FVector2D GridDimension, int32 PSidesNum, FVector2D GridPoint) const;
-
 	void GenerateRandomTetromino();
 	void SetBitmap(TArray<int32> NewBitmap);
-	void SetBlockRelativeLocationXY(int32 PIndex, FVector2D PLocation);
 	void Copy(ATetromino * OtherTetromino);
 	//FIntVector4 GetBoundIndex();
+
+	int32 GetSize() const;
+	TArray<int32> GetBitmap() const;
+	TArray<int32> GetGridIndeces(FVector2D GridDimension, FVector2D GridPoint) const;
 
 	void MoveLeft();
 	void MoveRight();

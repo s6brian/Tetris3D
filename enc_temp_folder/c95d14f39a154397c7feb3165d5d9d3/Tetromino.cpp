@@ -38,12 +38,7 @@ void ATetromino::PostInitializeComponents()
 void ATetromino::BeginPlay()
 {
 	Super::BeginPlay();
-	//GenerateRandomTetromino();
-
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("ATetromino::BeginPlay"));
-	//}
+	GenerateRandomTetromino();
 }
 
 void ATetromino::InitiateTetrominoShapes(TArray<FTetrominoMatrix> TetrominoShapes)
@@ -58,15 +53,9 @@ void ATetromino::InitiateTetrominoShapes(TArray<FTetrominoMatrix> TetrominoShape
 
 void ATetromino::GenerateRandomTetromino()
 {
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Generate Random Tetromino!"));
-	//}
-
-	// reset block locations
-	for (int32 Index = 0; Index < BLOCKS_COUNT; ++Index)
+	if (GEngine)
 	{
-		Blocks[Index]->SetRelativeLocation(FVector(0.0f, BlockSize * (Index % SIZE), BlockSize * (Index / SIZE)));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Generate Random Tetromino!"));
 	}
 
 	CurrentShape = TetrominoShapesArray[FMath::RandRange(0, TetrominoShapesArray.Num()-1)];
@@ -76,18 +65,6 @@ void ATetromino::GenerateRandomTetromino()
 void ATetromino::SetBitmap(TArray<int32> NewBitmap)
 {
 	CurrentShape.SetBitmap(NewBitmap);
-}
-
-void ATetromino::SetBlockRelativeLocationXY(int32 PIndex, FVector2D PLocation)
-{
-	int32 ComputedIndex  = PIndex % CurrentShape.GetSize();
-	      ComputedIndex += SIZE * (PIndex / CurrentShape.GetSize());
-
-	FVector NewLocation;
-	NewLocation.X = PLocation.X;
-	NewLocation.Y = PLocation.Y;
-	NewLocation.Z = BlockSize * (ComputedIndex / SIZE);
-	Blocks[ComputedIndex]->SetRelativeLocation(NewLocation);
 }
 
 int32 ATetromino::GetSize() const
@@ -100,19 +77,29 @@ TArray<int32> ATetromino::GetBitmap() const
 	return CurrentShape.GetBitmap();
 }
 
-TArray<int32> ATetromino::GetGridIndeces(FVector2D GridDimension, int32 PSidesNum, FVector2D GridPoint) const
+TArray<int32> ATetromino::GetGridIndeces(FVector2D GridDimension, FVector2D GridPoint) const
 {
 	TArray<int32> Indeces;
+
 	TArray<int32> TetrominoBitmap = CurrentShape.GetBitmap();
 	int32 TetrominoSize = CurrentShape.GetSize();
-	int32 Perimeter = (GridDimension.X - 1) * PSidesNum;
+	//int32 ComputedTetrominoIndex;
 	int32 ComputedGridIndex;
 
 	for (int32 Row = 0; Row < TetrominoSize; ++Row)
 	{
 		for (int32 Col = 0; Col < TetrominoSize; ++Col)
 		{
-			ComputedGridIndex  = (( Row + GridPoint.Y ) * Perimeter) + ((Col + (int32)GridPoint.X) % Perimeter);
+			//ComputedTetrominoIndex = ( Row * TetrominoSize ) + Col;
+			ComputedGridIndex = (( Row + GridPoint.Y ) * (GridDimension.X - 1) * 4) + Col + GridPoint.X;
+
+			//if (   ComputedGridIndex < 0
+			//	|| ComputedGridIndex >= (GridDimension.X * GridDimension.Y)
+			//	|| TetrominoBitmap[ComputedTetrominoIndex] == 0)
+			//{
+			//	continue;
+			//}
+
 			Indeces.Add(ComputedGridIndex);
 		}
 	}
@@ -124,6 +111,11 @@ void ATetromino::Copy(ATetromino * OtherTetromino)
 {
 	CurrentShape.SetBitmap(OtherTetromino->CurrentShape.GetBitmap());
 	RefreshDisplay();
+}
+
+void ATetromino::ResetPosition()
+{
+
 }
 
 void ATetromino::RefreshDisplay()

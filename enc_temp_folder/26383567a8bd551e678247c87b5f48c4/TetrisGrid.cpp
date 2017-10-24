@@ -33,7 +33,7 @@ void ATetrisGrid::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	UStaticMeshComponent * BlockStaticMeshComponent;
-	int32 BlocksCount = Dimension.X * Dimension.Y;
+	int32 BlocksCount = Dimension.X * Dimension.Y * Sides;
 
 	for (int32 Index = 0; Index < BlocksCount; ++Index)
 	{
@@ -42,7 +42,7 @@ void ATetrisGrid::PostInitializeComponents()
 		if (BlockStaticMeshComponent)
 		{
 			BlockStaticMeshComponent->SetupAttachment(RootComponent);
-			BlockStaticMeshComponent->SetRelativeLocation(FVector(0.0f, BlockSize * (Index % (int32)Dimension.X), BlockSize * ((Index / (int32)Dimension.X) + 1)));
+			BlockStaticMeshComponent->SetRelativeLocation(GetGridCoordinates(Index));
 			BlockStaticMeshComponent->SetWorldScale3D(FVector(BlockScale));
 			BlockStaticMeshComponent->SetStaticMesh(BlockStaticMesh);
 			BlockStaticMeshComponent->SetVisibility(false);
@@ -232,7 +232,6 @@ void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 void ATetrisGrid::GridCleanup()
 {
 	int32 RowIndecesCount    = RowIndeces.Num();
-	//int32 NextCachedRowIndex = 0;
 	int32 RowValue           = 0;
 	int32 ComputedIndexA     = 0;
 	int32 ComputedIndexB     = 0;
@@ -240,13 +239,11 @@ void ATetrisGrid::GridCleanup()
 	// fill each cleared out row
 	for (int32 CachedRowIndex = RowIndecesCount - 1; CachedRowIndex >= 0; --CachedRowIndex)
 	{
-		//NextCachedRowIndex = (CachedRowIndex < RowIndecesCount - 1) ? RowIndeces[CachedRowIndex + 1]: Dimension.Y - 1;
-		//for (int32 GridRowIndex = RowIndeces[CachedRowIndex]; GridRowIndex < NextCachedRowIndex; ++GridRowIndex)
-		RowValue = 0;
-
 		// drop all rows above the cleared row
 		for (int32 GridRowIndex = RowIndeces[CachedRowIndex]; GridRowIndex < Dimension.Y - 1; ++GridRowIndex)
 		{
+			RowValue = 0;
+
 			// drop each block in current row
 			for (int32 GridColumnIndex = 0; GridColumnIndex < Dimension.X; ++GridColumnIndex)
 			{
@@ -278,6 +275,27 @@ void ATetrisGrid::GridCleanup()
 	UpdateTetrominoPosition();
 
 	CurrentGridState = EGridState::Default;
+}
+
+FVector ATetrisGrid::GetGridCoordinates(int32 PGridIndex)
+{
+	FVector Position = FVector::OneVector;
+	int32 SideIndex;
+	float Sine;
+	float Cosine;
+
+	SideIndex = (PGridIndex / (int32)Dimension.X) % (int32)Sides;
+	FMath::SinCos(&Sine, &Cosine, FMath::DegreesToRadians(90.0f * SideIndex));
+
+	Position.X  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) + (BlockSize * (SideIndex / 2))) * FMath::Abs(Sine);   // forward | backward
+	Position.X += ((Dimension.X - 1) * BlockSize * -Cosine * 0.5f) + ((Dimension.X - 1) * BlockSize * FMath::Abs(Cosine) * 0.5f);
+
+	Position.Y  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) + (BlockSize * (SideIndex / 2))) * FMath::Abs(Cosine); // right | left
+	Position.Y += ((Dimension.X - 1) * BlockSize * Sine * 0.5f) + ((Dimension.X - 1) * BlockSize * FMath::Abs(Sine) * 0.5f);
+
+	Position.Z  = BlockSize * ((PGridIndex / (int32)(Dimension.X * Sides)) + 1);     // up | down
+
+	return Position;
 }
 
 bool ATetrisGrid::DidHitABlock()
