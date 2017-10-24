@@ -92,19 +92,12 @@ TArray<int32> ATetromino::GetGridIndeces(FVector2D GridDimension, FVector2D Grid
 		{
 			//ComputedTetrominoIndex = ( Row * TetrominoSize ) + Col;
 			ComputedGridIndex = (( Row + GridPoint.Y ) * (GridDimension.X - 1) * 4) + Col + GridPoint.X;
-			//ComputedGridIndex += 2;
 
 			//if (   ComputedGridIndex < 0
 			//	|| ComputedGridIndex >= (GridDimension.X * GridDimension.Y)
 			//	|| TetrominoBitmap[ComputedTetrominoIndex] == 0)
 			//{
 			//	continue;
-			//}
-
-			//if (GEngine)
-			//{
-			//	FString Message = FString::Printf(TEXT("(%d, %d): %d"), Col, Row, ComputedGridIndex);
-			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, Message);
 			//}
 
 			Indeces.Add(ComputedGridIndex);

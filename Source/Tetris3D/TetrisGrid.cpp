@@ -16,7 +16,7 @@ ATetrisGrid::ATetrisGrid()
 	//}
 
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;//true;
+	PrimaryActorTick.bCanEverTick = true;
 
 	IsClearing                    = false;
 	IsMoveLeftActive              = false;
@@ -33,21 +33,7 @@ void ATetrisGrid::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	UStaticMeshComponent * BlockStaticMeshComponent;
-	FVector Position = FVector::OneVector;
 	int32 BlocksCount = Dimension.X * Dimension.Y * Sides;
-	
-	int32 SideIndex;
-	float Sine;
-	float Cosine;
-
-	//if (GEngine)
-	//{
-	//	for (int32 Index = 0; Index < (int32)Sides; ++Index)
-	//	{
-	//		FMath::SinCos(&Sine, &Cosine, FMath::DegreesToRadians(90.0f * Index));
-	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("sin%d: %0.2f, cos%d: %0.2f"), (90 * Index), Sine, (90 * Index), Cosine));
-	//	}
-	//}
 
 	for (int32 Index = 0; Index < BlocksCount; ++Index)
 	{
@@ -56,23 +42,11 @@ void ATetrisGrid::PostInitializeComponents()
 		if (BlockStaticMeshComponent)
 		{
 			BlockStaticMeshComponent->SetupAttachment(RootComponent);
+			BlockStaticMeshComponent->SetRelativeLocation(GetGridCoordinates(Index));
 			BlockStaticMeshComponent->SetWorldScale3D(FVector(BlockScale));
 			BlockStaticMeshComponent->SetStaticMesh(BlockStaticMesh);
-			BlockStaticMeshComponent->SetVisibility(true);//false);
+			BlockStaticMeshComponent->SetVisibility(false);
 			BlockStaticMeshComponent->RegisterComponent();
-
-			SideIndex = (Index / (int32)Dimension.X) % (int32)Sides;
-			FMath::SinCos(&Sine, &Cosine, FMath::DegreesToRadians(90.0f * SideIndex));
-
-			Position.X  = ((BlockSize * ( Index % (int32)(Dimension.X - 1   ))) + (BlockSize * (SideIndex / 2))) * FMath::Abs(Sine);   // forward | backward
-			Position.X += ((Dimension.X - 1) * BlockSize * -Cosine * 0.5f) + ((Dimension.X - 1) * BlockSize * FMath::Abs(Cosine) * 0.5f);
-
-			Position.Y  = ((BlockSize * ( Index % (int32)(Dimension.X - 1   ))) + (BlockSize * (SideIndex / 2))) * FMath::Abs(Cosine); // right | left
-			Position.Y += ((Dimension.X - 1) * BlockSize * Sine * 0.5f) + ((Dimension.X - 1) * BlockSize * FMath::Abs(Sine) * 0.5f);
-
-			Position.Z  =  BlockSize * ((Index / (int32)(Dimension.X * Sides)) + 1);     // up | down
-			
-			BlockStaticMeshComponent->SetRelativeLocation(Position);
 
 			//if (GEngine)
 			//{
@@ -165,7 +139,18 @@ void ATetrisGrid::UpdateTetrominoPosition()
 
 void ATetrisGrid::StartMergeTimer()
 {
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("================================"));
+	//}
+
 	TArray<int32> GridIndeces     = CurrentTetromino->GetGridIndeces(Dimension, Point);
+
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("================================"));
+	//}
+
 	TArray<int32> TetrominoBitmap = CurrentTetromino->GetBitmap();
 	int32 TBitmapLength           = TetrominoBitmap.Num();
 	int32 GBitmapLength           = BitMap.Num();
@@ -301,6 +286,28 @@ void ATetrisGrid::GridCleanup()
 	UpdateTetrominoPosition();
 
 	CurrentGridState = EGridState::Default;
+}
+
+FVector ATetrisGrid::GetGridCoordinates(int32 PGridIndex)
+{
+	FVector Position = FVector::OneVector;
+	int32 SideIndex;
+	float Sine;
+	float Cosine;
+
+	SideIndex = (PGridIndex / (int32)(Dimension.X - 1)) % (int32)Sides;
+	FMath::SinCos(&Sine, &Cosine, FMath::DegreesToRadians(90.0f * SideIndex));
+
+	Position.X  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) + (BlockSize * (SideIndex / 2))) * FMath::Abs(Sine);   // forward | backward
+	Position.X += ((Dimension.X - 1) * BlockSize * -Cosine * 0.5f) + ((Dimension.X - 1) * BlockSize * FMath::Abs(Cosine) * 0.5f);
+
+	//Position.Y = BlockSize * ( PGridIndex % (int32)((Dimension.X - 1) * Sides));
+	Position.Y  = ((BlockSize * ( PGridIndex % (int32)(Dimension.X - 1   ))) + (BlockSize * (SideIndex / 2))) * FMath::Abs(Cosine); // right | left
+	Position.Y += ((Dimension.X - 1) * BlockSize * Sine * 0.5f) + ((Dimension.X - 1) * BlockSize * FMath::Abs(Sine) * 0.5f);
+
+	Position.Z  = BlockSize * ((PGridIndex / (int32)((Dimension.X - 1) * Sides)) + 1);     // up | down
+
+	return Position;
 }
 
 bool ATetrisGrid::DidHitABlock()

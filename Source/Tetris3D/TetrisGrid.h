@@ -83,6 +83,7 @@ protected:
 	void StartMergeTimer();
 	void UpdateTetrominoPosition();
 
+	FVector GetGridCoordinates(int32 PGridIndex);
 	bool DidHitABlock();
 
 public:	
