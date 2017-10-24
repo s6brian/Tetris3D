@@ -129,7 +129,7 @@ void ATetrisGrid::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PN
 
 	//UpdateTetrominoPosition();
 	//CurrentTetromino->SetActorLocation(FVector(0.0f, CurrentTetromino->BlockSize * Point.X, CurrentTetromino->BlockSize * Point.Y));
-	NextTetromino->SetActorLocation(FVector(0.0f, -450.0f, 200.0f));
+	NextTetromino->SetActorLocation(FVector(300.0f, 0.0f, 20000.0f));
 
 	if (GEngine)
 	{

@@ -2,9 +2,8 @@
 
 #include "S6PlayerController.h"
 #include "S6Player.h"
-//#include "Tetromino.h"
 #include "TetrisGrid.h"
-#include "Engine/World.h"
+//#include "Engine/World.h"
 
 void AS6PlayerController::BeginPlayingState()
 {
