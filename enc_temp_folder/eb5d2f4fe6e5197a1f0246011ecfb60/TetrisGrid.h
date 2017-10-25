@@ -28,11 +28,8 @@ public:
  *	PROPERTIES
  */
 protected:
-	const FVector NEXT_TETROMINO_LOCATION = FVector(0.0f, 0.0f, 20000.0f);
-
 	class ATetromino * CurrentTetromino;
 	class ATetromino * NextTetromino;
-	class USceneCaptureComponent2D * NextTetrominoView;
 
 	float LapsedTime;
 	float MoveLapseTime;
@@ -70,9 +67,6 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	float Speed = 1.0f;
 
-	UPROPERTY(EditDefaultsOnly)
-	UTextureRenderTarget2D * NextTetrominoRenderTexture2D;
-
 
 /**
  *	FUNCTIONS
@@ -88,7 +82,6 @@ protected:
 	void GridCleanup();
 	void StartMergeTimer();
 	void UpdateTetrominoPosition();
-	void RefreshNextTetrominoView();
 
 	FVector GetGridCoordinates(int32 PGridIndex);
 	bool DidHitABlock();

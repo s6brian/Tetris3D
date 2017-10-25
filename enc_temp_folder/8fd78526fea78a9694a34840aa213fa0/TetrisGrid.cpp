@@ -6,8 +6,6 @@
 #include "TetrisGrid.h"
 #include "Tetromino.h"
 #include "Components/StaticMeshComponent.h"
-#include "Components/SceneCaptureComponent2D.h"
-#include "Engine/World.h"
 
 // Sets default values
 ATetrisGrid::ATetrisGrid()
@@ -34,7 +32,6 @@ void ATetrisGrid::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	// add blocks
 	UStaticMeshComponent * BlockStaticMeshComponent;
 	int32 BlocksCount = Dimension.X * Dimension.Y * Sides;
 
@@ -59,15 +56,6 @@ void ATetrisGrid::PostInitializeComponents()
 			Blocks.Add(BlockStaticMeshComponent);
 			BitMap.Add(0);
 		}
-	}
-
-	// add scene capture 2D component
-	NextTetrominoView = NewObject<USceneCaptureComponent2D>(this, FName(TEXT("NextTetrominoView")));
-	if (NextTetrominoView && NextTetrominoRenderTexture2D)
-	{
-		NextTetrominoView->TextureTarget = NextTetrominoRenderTexture2D;
-		NextTetrominoView->SetWorldLocation(NEXT_TETROMINO_LOCATION);
-		NextTetrominoView->RegisterComponent();
 	}
 }
 
@@ -140,13 +128,13 @@ void ATetrisGrid::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PN
 	Point = FVector2D(4.0f, Dimension.Y);
 
 	//UpdateTetrominoPosition();
-	CurrentTetromino->SetActorLocation(NEXT_TETROMINO_LOCATION + FVector(  0.0f, 0.0f, 500.0f));
-	NextTetromino   ->SetActorLocation(NEXT_TETROMINO_LOCATION + FVector(300.0f, 0.0f,   0.0f));
-	RefreshNextTetrominoView();
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("GameState Set Tetrominoes..."));
-	//}
+	//CurrentTetromino->SetActorLocation(FVector(0.0f, CurrentTetromino->BlockSize * Point.X, CurrentTetromino->BlockSize * Point.Y));
+	NextTetromino->SetActorLocation(FVector(300.0f, 0.0f, 20000.0f));
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("GameState Set Tetrominoes..."));
+	}
 }
 
 void ATetrisGrid::UpdateTetrominoPosition()
@@ -164,15 +152,6 @@ void ATetrisGrid::UpdateTetrominoPosition()
 		NewLocation = GetGridCoordinates(GridIndeces[Index]);
 		CurrentTetromino->SetBlockRelativeLocationXY(Index, FVector2D(NewLocation.X, NewLocation.Y));
 	}
-}
-
-void ATetrisGrid::RefreshNextTetrominoView()
-{
-	// center next tetromino in viewport
-	FVector Center = NextTetromino->GetActorLocation();
-	Center.Y = NEXT_TETROMINO_LOCATION.Y - (BlockSize * NextTetromino->GetSize() * 0.5f);
-	Center.Z = NEXT_TETROMINO_LOCATION.Z - (BlockSize * NextTetromino->GetSize() * 0.5f);
-	NextTetromino->SetActorLocation(Center);
 }
 
 void ATetrisGrid::StartMergeTimer()
@@ -311,7 +290,6 @@ void ATetrisGrid::GridCleanup()
 
 	CurrentTetromino->Copy(NextTetromino);
 	NextTetromino->GenerateRandomTetromino();
-	RefreshNextTetrominoView();
 
 	Point = FVector2D(4.0f, Dimension.Y);
 	UpdateTetrominoPosition();
