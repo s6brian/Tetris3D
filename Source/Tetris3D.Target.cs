@@ -9,6 +9,7 @@ public class Tetris3DTarget : TargetRules
 	{
 		Type = TargetType.Game;
 
-		ExtraModuleNames.AddRange( new string[] { "Tetris3D" } );
+        //ExtraModuleNames.AddRange(new string[] { "Tetris3D" });
+        ExtraModuleNames.AddRange( new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "Slate", "SlateCore" } );
 	}
 }
