@@ -450,7 +450,7 @@ void ATetrisGrid::TetrominoMoveLeftStart()
 
 	if (Point.X < 0)
 	{
-		Point.X = ((Dimension.X - 1) * Sides) - 1;
+		Point.X = ((Dimension.X - 1) * Sides) + Point.X;
 	}
 
 	if (DidHitABlock())
@@ -478,7 +478,7 @@ void ATetrisGrid::TetrominoMoveRightStart()
 		Point.X -= 1.0f;
 		if (Point.X < 0)
 		{
-			Point.X = ((Dimension.X - 1) * Sides) - 1;
+			Point.X = ((Dimension.X - 1) * Sides) + Point.X;
 		}
 	}
 	else
