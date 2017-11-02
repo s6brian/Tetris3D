@@ -5,6 +5,7 @@
 #include "Tetromino.h"
 #include "Components/InputComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "ConstructorHelpers.h"
 
 // Sets default values
@@ -20,15 +21,21 @@ void ATetromino::PostInitializeComponents()
 	AutoPossessPlayer = EAutoReceiveInput::Disabled;
 
 	UStaticMeshComponent * BlockStaticMeshComponent;
+	UMaterialInstanceDynamic * DynamicBlockMat = UMaterialInstanceDynamic::Create(BlockMat, this);
+
 	for (int32 Index = 0; Index < BLOCKS_COUNT; ++Index)
 	{
-		BlockStaticMeshComponent = NewObject<UStaticMeshComponent>(this, FName(*FString::Printf(TEXT("Block_%d"), Index))); //CreateDefaultSubobject<UStaticMeshComponent>(FName(*FString::Printf(TEXT("Block_%d"), idx)));
+		BlockStaticMeshComponent = NewObject<UStaticMeshComponent>(this, FName(*FString::Printf(TEXT("Block_%d"), Index)));
 		BlockStaticMeshComponent->SetupAttachment(RootComponent);
 		BlockStaticMeshComponent->SetRelativeLocation(FVector(0.0f, BlockSize * (Index % SIZE), BlockSize * (Index / SIZE)));
 		BlockStaticMeshComponent->SetWorldScale3D(FVector(BlockScale));
 		BlockStaticMeshComponent->SetStaticMesh(BlockStaticMesh);
 		BlockStaticMeshComponent->SetVisibility(false);
 		BlockStaticMeshComponent->RegisterComponent();
+
+		//DynamicBlockMat->SetScalarParameterValue("Glow Intensity", 10);
+		//DynamicBlockMat->SetVectorParameterValue("Tile Color", FLinearColor(0.0f, 0.0f, 1.0f, 1.0f));
+		BlockStaticMeshComponent->SetMaterial(0, DynamicBlockMat);
 
 		Blocks.Add(BlockStaticMeshComponent);
 	}

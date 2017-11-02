@@ -29,6 +29,9 @@ public:
 	UStaticMesh * BlockStaticMesh;
 
 	UPROPERTY(EditDefaultsOnly)
+	UMaterial * BlockMat;
+
+	UPROPERTY(EditDefaultsOnly)
 	float BlockSize = 100.0f;
 
 	UPROPERTY(EditDefaultsOnly)
