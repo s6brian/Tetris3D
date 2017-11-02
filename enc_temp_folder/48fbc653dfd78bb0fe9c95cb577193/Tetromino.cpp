@@ -1,8 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #define SIZE 4
 #define BLOCKS_COUNT SIZE * SIZE
-#define GLOW_INTENSITY_PARAM_NAME "Glow Intensity"
-#define TILE_COLOR_PARAM_NAME "Tile Color"
 
 #include "Tetromino.h"
 #include "Components/InputComponent.h"
@@ -23,11 +21,7 @@ void ATetromino::PostInitializeComponents()
 	AutoPossessPlayer = EAutoReceiveInput::Disabled;
 
 	UStaticMeshComponent * BlockStaticMeshComponent;
-
-	FLinearColor LColor = HSVToRGB((float)(rand() % 255) / 255.0f, 0.8f, 0.9f);
-	DynamicBlockMat = UMaterialInstanceDynamic::Create(BlockMat, this);
-	DynamicBlockMat->SetVectorParameterValue(TILE_COLOR_PARAM_NAME, LColor);
-	//DynamicBlockMat->SetScalarParameterValue(GLOW_INTENSITY_PARAM_NAME, 10);
+	UMaterialInstanceDynamic * DynamicBlockMat = UMaterialInstanceDynamic::Create(BlockMat, this);
 
 	for (int32 Index = 0; Index < BLOCKS_COUNT; ++Index)
 	{
@@ -36,9 +30,12 @@ void ATetromino::PostInitializeComponents()
 		BlockStaticMeshComponent->SetRelativeLocation(FVector(0.0f, BlockSize * (Index % SIZE), BlockSize * (Index / SIZE)));
 		BlockStaticMeshComponent->SetWorldScale3D(FVector(BlockScale));
 		BlockStaticMeshComponent->SetStaticMesh(BlockStaticMesh);
-		BlockStaticMeshComponent->SetMaterial(0, DynamicBlockMat);
 		BlockStaticMeshComponent->SetVisibility(false);
 		BlockStaticMeshComponent->RegisterComponent();
+
+		//DynamicBlockMat->SetScalarParameterValue("Glow Intensity", 10);
+		//DynamicBlockMat->SetVectorParameterValue("Tile Color", FLinearColor(0.0f, 0.0f, 1.0f, 1.0f));
+		BlockStaticMeshComponent->SetMaterial(0, DynamicBlockMat);
 
 		Blocks.Add(BlockStaticMeshComponent);
 	}
@@ -79,7 +76,6 @@ void ATetromino::GenerateRandomTetromino()
 		Blocks[Index]->SetRelativeLocation(FVector(0.0f, BlockSize * (Index % SIZE), BlockSize * (Index / SIZE)));
 	}
 
-	DynamicBlockMat->SetVectorParameterValue(TILE_COLOR_PARAM_NAME, HSVToRGB((float)(rand() % 255) / 255.0f, 0.8f, 0.9f));
 	CurrentShape = TetrominoShapesArray[FMath::RandRange(0, TetrominoShapesArray.Num()-1)];
 	RefreshDisplay();
 }
@@ -131,22 +127,9 @@ TArray<int32> ATetromino::GetGridIndeces(FVector2D GridDimension, int32 PSidesNu
 	return Indeces;
 }
 
-UMaterialInstanceDynamic * ATetromino::GetDynamicBlockMatInstance()
-{
-	return DynamicBlockMat;
-}
-
 void ATetromino::Copy(ATetromino * OtherTetromino)
 {
 	CurrentShape.SetBitmap(OtherTetromino->CurrentShape.GetBitmap());
-
-	UMaterialInstanceDynamic * OtherTetrominoDynamicMat = OtherTetromino->GetDynamicBlockMatInstance();
-	FLinearColor LColor;
-	if (OtherTetrominoDynamicMat && OtherTetrominoDynamicMat->GetVectorParameterValue(TILE_COLOR_PARAM_NAME, LColor))
-	{
-		DynamicBlockMat->SetVectorParameterValue(TILE_COLOR_PARAM_NAME, LColor);
-	}
-
 	RefreshDisplay();
 }
 
@@ -171,62 +154,6 @@ void ATetromino::RefreshDisplay()
 		ComputedIndex  = idx % TetrominoSize;
 		ComputedIndex += SIZE * (idx / TetrominoSize);
 		Blocks[ComputedIndex]->SetVisibility(TetrominoMap[idx] == 1);
-	}
-}
-
-FLinearColor ATetromino::HSVToRGB(float H, float S, float V)
-{
-	// sources:
-	// (1) https://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
-	// (2) https://www.programmingalgorithms.com/algorithm/hsv-to-rgb?lang=C%2B%2B
-
-	int I;
-	float F;
-	float P;
-	float Q;
-	float T;
-
-	if (S == 0.0f)
-	{
-		return FLinearColor(V, V, V);
-	}
-	else
-	{
-		I = roundf (H * 6);
-		F = H * 6 - I;
-		P = V * (1 - S);
-		Q = V * (1 - F * S);
-		T = V * (1 - (1 - F) * S);
-
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("H: %.2f, S: %.2f, V: %.2f, LColor: "), H, S, V));
-
-		switch (I)
-		{
-		case 0:
-		{
-			return FLinearColor(V, T, P);
-		}
-		case 1:
-		{
-			return FLinearColor(Q, V, P);
-		}
-		case 2:
-		{
-			return FLinearColor(P, V, T);
-		}
-		case 3:
-		{
-			return FLinearColor(P, Q, V);
-		}
-		case 4:
-		{
-			return FLinearColor(T, P, V);
-		}
-		default:
-		{
-			return FLinearColor(V, P, Q);
-		}
-		}
 	}
 }
 

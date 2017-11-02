@@ -23,7 +23,6 @@ private:
 	TArray<class UStaticMeshComponent *> Blocks;
 	TArray<FTetrominoMatrix> TetrominoShapesArray;
 	FTetrominoMatrix CurrentShape;
-	UMaterialInstanceDynamic * DynamicBlockMat;
 
 public:
 	UPROPERTY(EditDefaultsOnly)
@@ -50,13 +49,11 @@ protected:
 	void InitiateTetrominoShapes(TArray<FTetrominoMatrix> TetrominoShapes);
 
 	void RefreshDisplay();
-	FLinearColor HSVToRGB(float H, float S, float V);
 
 public:	
 	int32 GetSize() const;
 	TArray<int32> GetBitmap() const;
 	TArray<int32> GetGridIndeces(FVector2D GridDimension, int32 PSidesNum, FVector2D GridPoint) const;
-	UMaterialInstanceDynamic * GetDynamicBlockMatInstance();
 
 	void GenerateRandomTetromino();
 	void SetBitmap(TArray<int32> NewBitmap);
