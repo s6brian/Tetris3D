@@ -1,4 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+#define GLOW_INTENSITY_PARAM_NAME "Glow Intensity"
+#define TILE_COLOR_PARAM_NAME "Tile Color"
 
 #pragma once
 

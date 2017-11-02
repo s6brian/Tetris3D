@@ -7,7 +7,6 @@
 #include "Tetromino.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
-#include "Materials/MaterialInstanceDynamic.h"
 #include "Engine/World.h"
 
 // Sets default values
@@ -37,13 +36,11 @@ void ATetrisGrid::PostInitializeComponents()
 
 	// add blocks
 	UStaticMeshComponent * BlockStaticMeshComponent;
-	UMaterialInstanceDynamic * BlockMatInstance;
 	int32 BlocksCount = Dimension.X * Dimension.Y * Sides;
 
 	for (int32 Index = 0; Index < BlocksCount; ++Index)
 	{
 		BlockStaticMeshComponent = NewObject<UStaticMeshComponent>(this, FName(*FString::Printf(TEXT("Block_%d"), Index)));
-		BlockMatInstance = UMaterialInstanceDynamic::Create(BlockMat, this);
 
 		if (BlockStaticMeshComponent)
 		{
@@ -51,7 +48,6 @@ void ATetrisGrid::PostInitializeComponents()
 			BlockStaticMeshComponent->SetRelativeLocation(GetGridCoordinates(Index));
 			BlockStaticMeshComponent->SetWorldScale3D(FVector(BlockScale));
 			BlockStaticMeshComponent->SetStaticMesh(BlockStaticMesh);
-			BlockStaticMeshComponent->SetMaterial(0, BlockMatInstance);
 			BlockStaticMeshComponent->SetVisibility(false);
 			BlockStaticMeshComponent->RegisterComponent();
 
@@ -60,7 +56,6 @@ void ATetrisGrid::PostInitializeComponents()
 			//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("Add Block_%d at (%0.2f, %0.2f, %0.2f)"), Index, 0.0f, BlockSize * (Index % (int32)Dimension.X), BlockSize * (Index / Dimension.X)));
 			//}
 
-			DynamicBlockMats.Add(BlockMatInstance);
 			Blocks.Add(BlockStaticMeshComponent);
 			BitMap.Add(0);
 		}
@@ -187,13 +182,6 @@ void ATetrisGrid::StartMergeTimer()
 	int32 TBitmapLength           = TetrominoBitmap.Num();
 	int32 GBitmapLength           = BitMap.Num();
 
-	UMaterialInstanceDynamic * CurrentTetrominoDynamicMat = CurrentTetromino->GetDynamicBlockMatInstance();
-	FLinearColor LColor;
-	if (!(CurrentTetrominoDynamicMat && CurrentTetrominoDynamicMat->GetVectorParameterValue(TILE_COLOR_PARAM_NAME, LColor)))
-	{
-		LColor = FLinearColor(0.0f, 0.0f, 0.0f);
-	}
-
 	for (int Index = 0; Index < TBitmapLength; ++Index)
 	{
 		if (   GridIndeces[Index]     <  0
@@ -203,7 +191,6 @@ void ATetrisGrid::StartMergeTimer()
 			continue;
 		}
 
-		DynamicBlockMats[GridIndeces[Index]]->SetVectorParameterValue(TILE_COLOR_PARAM_NAME, LColor);
 		BitMap[GridIndeces[Index]] = TetrominoBitmap[Index];
 		Blocks[GridIndeces[Index]]->SetVisibility(true);
 	}
@@ -309,21 +296,8 @@ void ATetrisGrid::GridCleanup()
 				BitMap[ComputedIndexA] = BitMap[ComputedIndexB];
 				BitMap[ComputedIndexB] = 0;
 
-				Blocks[ComputedIndexA]->SetVisibility(false);
+				Blocks[ComputedIndexA]->SetVisibility(BitMap[ComputedIndexA] == 1);
 				Blocks[ComputedIndexB]->SetVisibility(false);
-
-				if (BitMap[ComputedIndexA] == 1)
-				{
-					//UMaterialInstanceDynamic * CurrentTetrominoDynamicMat = CurrentTetromino->GetDynamicBlockMatInstance();
-					FLinearColor LColor;
-					if (!DynamicBlockMats[ComputedIndexB]->GetVectorParameterValue(TILE_COLOR_PARAM_NAME, LColor))
-					{
-						LColor = FLinearColor(0.0f, 0.0f, 0.0f);
-					}
-
-					DynamicBlockMats[ComputedIndexA]->SetVectorParameterValue(TILE_COLOR_PARAM_NAME, LColor);
-					Blocks[ComputedIndexA]->SetVisibility(true);
-				}
 			}
 
 			// all rows with visible blocks dropped
