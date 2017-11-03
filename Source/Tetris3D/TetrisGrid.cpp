@@ -339,9 +339,21 @@ void ATetrisGrid::GridCleanup()
 	NextTetromino->GenerateRandomTetromino();
 	RefreshNextTetrominoView();
 
-	Point = FVector2D(4.0f, Dimension.Y);
-	UpdateTetrominoPosition();
+	// determine if spawn offset left, right or none
+	float PointX = (rand() % 2) - 1;  
+	// get next spawn side index
+	PointX += fmodf (Point.X, (Dimension.X - 1));
+	// ensure valid side index
+	PointX  = PointX < 0 ? Sides - PointX : fmod (PointX, Sides); 
+	// get side left corner point
+	PointX *= Dimension.X; 
+	// get side mid point
+	PointX += floor (Dimension.X * 0.5f); 
+	// get tetromino offset
+	PointX -= ceilf (CurrentTetromino->GetSize() * 0.5f); 
 
+	Point = FVector2D(PointX, Dimension.Y);
+	UpdateTetrominoPosition();
 	CurrentGridState = EGridState::Default;
 }
 
