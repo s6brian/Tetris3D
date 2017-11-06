@@ -8,7 +8,6 @@
 void AS6PlayerController::BeginPlayingState()
 {
 	S6Player = Cast<AS6Player>(this->GetPawn());
-	TetrisGrid->SetPlayer(S6Player);
 }
 
 //void AS6PlayerController::SetTetromino(ATetromino * PTetromino)
@@ -25,22 +24,20 @@ void AS6PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("DebugScore", IE_Pressed , this, &AS6PlayerController::OnDebugScore   );
+	InputComponent->BindAction("MouseLeft", IE_Pressed , this, &AS6PlayerController::OnMouseLeftDown);
+	InputComponent->BindAction("MoveLeft" , IE_Pressed , this, &AS6PlayerController::OnPressA       );
+	InputComponent->BindAction("MoveRight", IE_Pressed , this, &AS6PlayerController::OnPressD       );
+	InputComponent->BindAction("RotateCW" , IE_Pressed , this, &AS6PlayerController::OnPressE       );
+	InputComponent->BindAction("RotateCCW", IE_Pressed , this, &AS6PlayerController::OnPressQ       );
+	InputComponent->BindAction("SoftDrop" , IE_Pressed , this, &AS6PlayerController::OnPressS       );
+	InputComponent->BindAction("HardDrop" , IE_Pressed , this, &AS6PlayerController::OnPressSpacebar);
 
-	InputComponent->BindAction("MouseLeft",  IE_Pressed , this, &AS6PlayerController::OnMouseLeftDown);
-	InputComponent->BindAction("MoveLeft" ,  IE_Pressed , this, &AS6PlayerController::OnPressA       );
-	InputComponent->BindAction("MoveRight",  IE_Pressed , this, &AS6PlayerController::OnPressD       );
-	InputComponent->BindAction("RotateCW" ,  IE_Pressed , this, &AS6PlayerController::OnPressE       );
-	InputComponent->BindAction("RotateCCW",  IE_Pressed , this, &AS6PlayerController::OnPressQ       );
-	InputComponent->BindAction("SoftDrop" ,  IE_Pressed , this, &AS6PlayerController::OnPressS       );
-	InputComponent->BindAction("HardDrop" ,  IE_Pressed , this, &AS6PlayerController::OnPressSpacebar);
+	InputComponent->BindAction("MouseLeft", IE_Released, this, &AS6PlayerController::OnMouseLeftUp  );
+	InputComponent->BindAction("MoveLeft" , IE_Released, this, &AS6PlayerController::OnReleaseA     );
+	InputComponent->BindAction("MoveRight", IE_Released, this, &AS6PlayerController::OnReleaseD     );
+	InputComponent->BindAction("SoftDrop" , IE_Released, this, &AS6PlayerController::OnReleaseS     );
 
-	InputComponent->BindAction("MouseLeft",  IE_Released, this, &AS6PlayerController::OnMouseLeftUp  );
-	InputComponent->BindAction("MoveLeft" ,  IE_Released, this, &AS6PlayerController::OnReleaseA     );
-	InputComponent->BindAction("MoveRight",  IE_Released, this, &AS6PlayerController::OnReleaseD     );
-	InputComponent->BindAction("SoftDrop" ,  IE_Released, this, &AS6PlayerController::OnReleaseS     );
-
-	InputComponent->BindAxis  ("MouseX"   ,               this, &AS6PlayerController::OnMouseX       );
+	InputComponent->BindAxis  ("MouseX"   ,              this, &AS6PlayerController::OnMouseX       );
 
 	
 }
@@ -197,11 +194,6 @@ void AS6PlayerController::OnReleaseS()
 	{
 		TetrisGrid->SoftDropEnd();
 	}
-}
-
-void AS6PlayerController::OnDebugScore()
-{
-	S6Player->AddScore(1);
 }
 
 

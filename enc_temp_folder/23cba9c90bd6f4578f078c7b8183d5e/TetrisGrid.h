@@ -30,7 +30,6 @@ public:
 protected:
 	const FVector NEXT_TETROMINO_LOCATION = FVector(0.0f, 0.0f, 20000.0f);
 
-	class AS6Player  * Player;
 	class ATetromino * CurrentTetromino;
 	class ATetromino * NextTetromino;
 	class USceneCaptureComponent2D * NextTetrominoView;
@@ -102,7 +101,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PNextTetromino);
-	void SetPlayer(AS6Player * PPlayer);
 
 	// Controls
 	void HardDrop();

@@ -39,8 +39,6 @@ protected:
 	void OnReleaseD();
 	void OnReleaseS();
 
-	void OnDebugScore();
-
 public:
 	//void SetTetromino(class ATetromino * PTetromino);
 	void SetTetrisGrid(class ATetrisGrid * PTetrisGrid);
