@@ -47,6 +47,7 @@ protected:
 
 	TArray<int32> BitMap;
 	TArray<class UStaticMeshComponent *> Blocks;
+	TArray<class UMaterialInstanceDynamic *> DynamicBlockMats; 
 
 	FVector2D Point;
 	EGridState CurrentGridState;
@@ -60,6 +61,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMesh * BlockStaticMesh;
+
+	UPROPERTY(EditDefaultsOnly)
+	UMaterial * BlockMat;
 
 	UPROPERTY(EditDefaultsOnly)
 	float BlockSize = 100.0f;
