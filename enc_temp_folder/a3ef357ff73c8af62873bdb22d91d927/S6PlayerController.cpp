@@ -10,11 +10,6 @@ void AS6PlayerController::BeginPlayingState()
 {
 	Super::BeginPlayingState();
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("AS6PlayerController::BeginPlayingState"));
-	}
-
 	S6Player = Cast<AS6Player>(this->GetPawn());
 	TetrisGrid->SetPlayer(S6Player);
 
@@ -29,11 +24,6 @@ void AS6PlayerController::BeginPlayingState()
 void AS6PlayerController::Possess(APawn* InPawn)
 {
 	Super::Possess(InPawn);
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("AS6PlayerController::Possess"));
-	}
 
 	//S6Player = Cast<AS6Player>(InPawn);
 	//TetrisGrid->SetPlayer(S6Player);

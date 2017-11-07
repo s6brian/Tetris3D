@@ -15,10 +15,22 @@ class TETRIS3D_API AS6PlayerController : public APlayerController
 	GENERATED_BODY()
 
 protected:
-	virtual void SetupInputComponent() override;
-	virtual void BeginPlayingState() override;
+	UUserWidget * HUD;
+	UUserWidget * PauseMenu;
+	
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> HUDBP;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> PauseMenuBP;
 
 protected:
+	virtual void SetupInputComponent() override;
+	virtual void Possess(APawn* InPawn) override;
+	virtual void BeginPlayingState() override;
+
 	//class ATetromino  * Tetromino;
 	class ATetrisGrid * TetrisGrid;
 	class AS6Player   * S6Player;
