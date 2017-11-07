@@ -28,8 +28,7 @@ public:
 
 protected:
 	virtual void SetupInputComponent() override;
-	virtual void Possess(APawn* InPawn) override;
-	virtual void BeginPlayingState() override;
+	virtual void BeginPlay() override;
 
 	//class ATetromino  * Tetromino;
 	class ATetrisGrid * TetrisGrid;
@@ -55,6 +54,9 @@ protected:
 	void OnDebugScore();
 
 public:
+	UFUNCTION(BlueprintCallable)
+	void SetUserWidgets();
+
 	//void SetTetromino(class ATetromino * PTetromino);
 	void SetTetrisGrid(class ATetrisGrid * PTetrisGrid);
 

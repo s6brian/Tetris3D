@@ -6,7 +6,7 @@
 #include "UserWidget.h"
 //#include "Engine/World.h"
 
-void AS6PlayerController::BeginPlayingState()
+void AS6PlayerController::BeginPlay()
 {
 	Super::BeginPlayingState();
 
@@ -17,39 +17,19 @@ void AS6PlayerController::BeginPlayingState()
 
 	S6Player = Cast<AS6Player>(this->GetPawn());
 	TetrisGrid->SetPlayer(S6Player);
-
-	if (HUDBP)
-	{
-		HUD = CreateWidget<UUserWidget>(this, HUDBP);
-		HUD->AddToViewport();
-		this->SetInputMode(FInputModeGameOnly());
-	}
-
-	if (PauseMenuBP)
-	{
-		PauseMenu = CreateWidget<UUserWidget>(this, PauseMenuBP);
-		PauseMenu->AddToViewport();
-		PauseMenu->SetVisibility(ESlateVisibility::Hidden);
-	}
-}
-
-void AS6PlayerController::Possess(APawn* InPawn)
-{
-	Super::Possess(InPawn);
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("AS6PlayerController::Possess"));
-	}
-
-	//S6Player = Cast<AS6Player>(InPawn);
-	//TetrisGrid->SetPlayer(S6Player);
+	this->SetInputMode(FInputModeGameOnly());
 
 	//if (HUDBP)
 	//{
 	//	HUD = CreateWidget<UUserWidget>(this, HUDBP);
 	//	HUD->AddToViewport();
-	//	this->SetInputMode(FInputModeGameOnly());
+	//}
+
+	//if (PauseMenuBP)
+	//{
+	//	PauseMenu = CreateWidget<UUserWidget>(this, PauseMenuBP);
+	//	PauseMenu->AddToViewport();
+	//	PauseMenu->SetVisibility(ESlateVisibility::Hidden);
 	//}
 }
 
@@ -255,5 +235,20 @@ void AS6PlayerController::OnDebugScore()
 	S6Player->AddScore(1);
 }
 
+void AS6PlayerController::SetUserWidgets()
+{
+	if (HUDBP)
+	{
+		HUD = CreateWidget<UUserWidget>(this, HUDBP);
+		HUD->AddToViewport();
+	}
+
+	if (PauseMenuBP)
+	{
+		PauseMenu = CreateWidget<UUserWidget>(this, PauseMenuBP);
+		PauseMenu->AddToViewport();
+		PauseMenu->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
 
 
