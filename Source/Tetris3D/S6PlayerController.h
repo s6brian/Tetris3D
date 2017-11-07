@@ -51,6 +51,7 @@ protected:
 	void OnReleaseD();
 	void OnReleaseS();
 
+	void OnPause();
 	void OnDebugScore();
 
 public:

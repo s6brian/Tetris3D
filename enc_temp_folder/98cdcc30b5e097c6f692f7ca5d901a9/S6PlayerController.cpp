@@ -10,6 +10,11 @@ void AS6PlayerController::BeginPlayingState()
 {
 	Super::BeginPlayingState();
 
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("AS6PlayerController::BeginPlayingState"));
+	}
+
 	S6Player = Cast<AS6Player>(this->GetPawn());
 	TetrisGrid->SetPlayer(S6Player);
 
@@ -19,11 +24,23 @@ void AS6PlayerController::BeginPlayingState()
 		HUD->AddToViewport();
 		this->SetInputMode(FInputModeGameOnly());
 	}
+
+	if (PauseMenuBP)
+	{
+		PauseMenu = CreateWidget<UUserWidget>(this, PauseMenuBP);
+		PauseMenu->AddToViewport();
+		PauseMenu->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void AS6PlayerController::Possess(APawn* InPawn)
 {
 	Super::Possess(InPawn);
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("AS6PlayerController::Possess"));
+	}
 
 	//S6Player = Cast<AS6Player>(InPawn);
 	//TetrisGrid->SetPlayer(S6Player);
@@ -59,6 +76,7 @@ void AS6PlayerController::SetupInputComponent()
 	InputComponent->BindAction("RotateCCW",  IE_Pressed , this, &AS6PlayerController::OnPressQ       );
 	InputComponent->BindAction("SoftDrop" ,  IE_Pressed , this, &AS6PlayerController::OnPressS       );
 	InputComponent->BindAction("HardDrop" ,  IE_Pressed , this, &AS6PlayerController::OnPressSpacebar);
+	InputComponent->BindAction("Pause"    ,  IE_Pressed , this, &AS6PlayerController::OnPause        );
 
 	InputComponent->BindAction("MouseLeft",  IE_Released, this, &AS6PlayerController::OnMouseLeftUp  );
 	InputComponent->BindAction("MoveLeft" ,  IE_Released, this, &AS6PlayerController::OnReleaseA     );
@@ -222,6 +240,12 @@ void AS6PlayerController::OnReleaseS()
 	{
 		TetrisGrid->SoftDropEnd();
 	}
+}
+
+void AS6PlayerController::OnPause()
+{
+	this->SetPause(true);
+	PauseMenu->SetVisibility(ESlateVisibility::Visible);
 }
 
 void AS6PlayerController::OnDebugScore()
