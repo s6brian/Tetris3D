@@ -5,6 +5,7 @@
 
 #include "TetrisGrid.h"
 #include "Tetromino.h"
+#include "S6Player.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -154,6 +155,11 @@ void ATetrisGrid::SetTetrominoes(ATetromino * PCurrentTetromino, ATetromino * PN
 	//}
 }
 
+void ATetrisGrid::SetPlayer(AS6Player * PPlayer)
+{
+	Player = PPlayer;
+}
+
 void ATetrisGrid::UpdateTetrominoPosition()
 {
 	// update vertical position
@@ -228,6 +234,7 @@ void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 
 		int32 ComputedIndex = 0;
 		
+		// loop through all marked rows for clearing
 		for (int32 Index = RowIndeces.Num()-1; Index >= 0; Index -= 2)
 		{
 			ComputedIndex = (RowIndeces[Index] * Perimeter) + ColumnIndex;
@@ -245,9 +252,13 @@ void ATetrisGrid::ClearRowAnimation(float DeltaTime)
 			Blocks[ComputedIndex]->SetVisibility(false);
 		}
 
+		if (Player)
+		{
+			Player->AddScore(RowIndeces.Num());
+		}
+
 		ColumnIndex++;
 		LapsedTime = 0.0f;
-		
 	}
 	else // cache row indeces to be cleared
 	{

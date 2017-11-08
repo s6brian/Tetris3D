@@ -21,9 +21,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ATetrisGrid> TetrisGridBPClass;
 
-	//class ATetromino * CurrentTetromino;
-	//class ATetromino * NextTetromino;
-
 protected:
 	virtual void StartPlay() override;
 	virtual APlayerController* SpawnPlayerController(ENetRole InRemoteRole, FVector const & SpawnLocation, FRotator const & SpawnRotation) override;

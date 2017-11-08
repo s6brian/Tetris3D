@@ -81,6 +81,26 @@ void AS6Player::Tick(float DeltaTime)
 //
 //}
 
+void AS6Player::AddScore(int32 PDeltaScore)
+{
+	Score += PDeltaScore;
+
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("[SET] Score: %i"), Score));
+	//}
+}
+
+int32 AS6Player::GetScore()
+{
+	return Score;
+
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("[GET] Score: %i"), Score));
+	//}
+}
+
 void AS6Player::YawCamera(float AxisValue)
 {
 	// update camera rotation x only while holding down left mouse

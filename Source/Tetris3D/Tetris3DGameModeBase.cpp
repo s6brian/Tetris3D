@@ -2,7 +2,7 @@
 
 #include "Tetris3DGameModeBase.h"
 #include "S6PlayerController.h"
-#include "S6Player.h"
+//#include "S6Player.h"
 #include "Tetris3DGameStateBase.h"
 #include "Tetromino.h"
 #include "TetrisGrid.h"
@@ -62,15 +62,32 @@ APlayerController* ATetris3DGameModeBase::SpawnPlayerController(ENetRole InRemot
 	ATetrisGrid         * TetrisGrid         = World->SpawnActor<ATetrisGrid>(TetrisGridBPClass, Location, Rotation);
 	AS6PlayerController * S6PlayerController = Cast<AS6PlayerController>(pc);
 
-	if (S6PlayerController)
-	{
-		//S6PlayerController->SetTetromino(CurrentTetromino);
-		S6PlayerController->SetTetrisGrid(TetrisGrid);
-	}
-
-	if (TetrisGrid)
+	if (TetrisGrid && CurrentTetromino && NextTetromino)
 	{
 		TetrisGrid->SetTetrominoes(CurrentTetromino, NextTetromino);
+	}
+	else
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Missing Tetris grid and pieces!"));
+		}
+
+		return pc;
+	}
+
+	if (S6PlayerController)
+	{
+		S6PlayerController->SetTetrisGrid(TetrisGrid);
+	}
+	else
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Missing player controller!"));
+		}
+
+		return pc;
 	}
 
 	if (GEngine)

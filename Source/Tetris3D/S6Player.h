@@ -16,31 +16,33 @@ public:
 	AS6Player();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-protected:
-	UPROPERTY(EditAnywhere)
+	//UPROPERTY(EditAnywhere)
 	class USpringArmComponent* OurCameraSpringArm;
 	class UCameraComponent* OurCamera;
 	//class ATetromino* NextTetromino;
-	
+
 	//Input variables
 	FVector2D CameraInput;
 	bool bMouseLeftPressed;
 
-public:
-	//void SetNextTetrominoPreview(class ATetromino * PNextTetromino);
+	int32 Score;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	virtual void Tick(float DeltaTime) override;
+	void AddScore(int32 PDeltaScore);
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetScore();
 
 	//Input functions
 	void YawCamera(float AxisValue);
 	void OnMouseLeftDown();
 	void OnMouseLeftUp();
+
+
+
 };
